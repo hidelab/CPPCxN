@@ -1,0 +1,116 @@
+require(Rcpp)
+require(RcppGSL)
+library(RcppArmadillo)
+library('inline')
+library("microbenchmark")
+library(corpcor)
+
+# Example data for OverlapCoefficient
+y1 <- runif(10, min=0, max=200)
+x1 <- runif(10, min=0, max=200) 
+
+# Example data for ShrinkCor !!! these variables are imported to ShrinkCor.cpp
+# DO NOT CHANGE NAMES
+y2 <- runif(1500, min=0, max=2000)
+x2 <- runif(1500, min=0, max=2000) 
+
+# Example data for GetSummary
+x_matrix <- matrix(1:100, nrow = 10, dimnames = list(c("gene1","gene2","gene3","gene4","gene5","gene6","gene7","gene8","gene9","gene10"), c("s1","s2","s3","s4","s5","s6","s7","s8","s9","s10")))
+x_gs <- c("gene1","gene3","gene5","gene9")
+
+# R functions
+OverlapCoefficient <- function(x,y){
+    # function to calculate the overlap coefficient between x and y
+    # which is defined as the size of the intersection divided by the
+    # size of the smaller set
+    #
+    # Args
+    #   x: a vector
+    #   y: a vector
+    #
+    # Returns
+    #   the overlap coefficient, a number between 0 and 1
+    
+    length(intersect(x,y))/min(length(unique(x)),length(unique(y)))
+}
+
+GetSummary = function(dat,gs,sum_fun){
+    # function to calculate the summary statistic for the pathway
+    #
+    # Args.
+    #   dat: genes by samples matrix
+    #   gs: vector with the names of the genes in the gene set
+    #   sum_fun: function to calculate the summary
+    #
+    # Returns
+    #   a 1 by samples vector with the summary statistic for the pathway
+    
+    if(length(gs) > 1){
+        # calculate summary for pathways with more than 1 element
+        return(sum_fun(dat[rownames(dat) %in% gs,]))
+    }else{
+        # return actual value for pathways with a single element
+        return(dat[rownames(dat) %in% gs,])
+    }
+}
+
+ShrinkCor = function(x,y,method="pearson"){
+    # wrapper to estimate the correlation coefficient between x and y using the 
+    # shrinkage estimator from Schaffer & Strimmer (2005) [corpcor package]
+    # and the corresponding t-statistic and p-value
+    #
+    # Args
+    #   x: a vector with n observations
+    #   y: a vector with n observations
+    #   method: character to pick either the Pearson or Spearman correlation coefficient
+    #
+    # Returns
+    #   a named vector with the correlation estimate, the sample size n, the t-statistic
+    #   and its corresponding p-value
+    
+    # function to get the t-statistic
+    GetStatistic <- function(r,n){r*sqrt((n-2)/(1-r^2))}
+    # get sample size
+    if(length(x) == length(y)){
+        n <- length(x)
+    }else{
+        cat("\n x and y have different lengths! >=( \n")
+        return(NA)
+    }
+    # determine method
+    selected_method <- match(method,c("pearson","spearman"))
+    # Pearson correlation
+    if(selected_method == 1){
+        estimate <- cor.shrink(cbind(x,y),verbose=F)
+        statistic <- GetStatistic(estimate[2,1],n)
+        p.value <- 2*pt(-abs(statistic),n-2)
+    }else if(selected_method == 2){
+        estimate <- cor.shrink(cbind(rank(x),rank(y)),verbose=F)
+        statistic <- GetStatistic(estimate[2,1],n)
+        p.value <- 2*pt(-abs(statistic),n-2)
+    }else{
+        cat("invalid method! >=( \n")
+        return(NA)
+    }
+    # prepare results
+    res <- c(estimate[2,1],n,statistic,p.value)
+    names(res) <- c("estimate","n","statistic","p.value")
+    return(res)
+}
+
+Rcpp::sourceCpp("OverlapCoefficient.cpp")
+Rcpp::sourceCpp("ShrinkCor.cpp",embeddedR = TRUE)
+Rcpp::sourceCpp("GetSummary.cpp")
+
+# Benchmarking
+results_OverlapCoefficient <- microbenchmark(OverlapCoefficient = OverlapCoefficient(x1,y1), OverlapCoefficient_cpp = OverlapCoefficient_cpp(x1,y1))
+results_summary_OverlapCoefficient <- summary(results_OverlapCoefficient)[, c(1:7)]
+print(summary(results_OverlapCoefficient)[, c(1:7)],digits=1)
+
+results_GetSummary <- microbenchmark(GetSummary = GetSummary(x_matrix,x_gs,sum_fun=colMeans), GetSummary_cpp = GetSummary_cpp(x_matrix,x_gs,1))
+results_summary_GetSummary <- summary(results_GetSummary)[, c(1:7)]
+print(summary(results_GetSummary)[, c(1:7)],digits=1)
+
+results_ShrinkCor <- microbenchmark(ShrinkCor = ShrinkCor(x2,y2), ShrinkCor_cpp = ShrinkCor_cpp(x2,y2,1))
+results_summary_ShrinkCor <- summary(results_ShrinkCor)[, c(1:7)]
+print(summary(results_ShrinkCor)[, c(1:7)],digits=1)

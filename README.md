@@ -1,1 +1,1 @@
-# (excellently named) CPPCxN
+# (expertly named) CPPCxN
