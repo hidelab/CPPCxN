@@ -63,40 +63,32 @@ NumericVector ShrinkCor_cpp(NumericVector x, NumericVector y, int method, Functi
         // Fetching the result of cor.shrink
         //NumericMatrix estimate_1 = R_Env["estimate_1"];
         
-        //std::string my_string = "Grab_C++ : ";
-        //Rcout << my_string << estimate_1(1,0) << std::endl;
-        
         double statistic_1 = GetStatistic_cpp(estimate_1(1,0),n);
         double p_value_1 = 2*R::pt(-abs(statistic_1),(n-2),1,0);
-        
-        //std::string my_1 = "Results 1: ";
-        //Rcout << my_1 << std::endl;
-        //Rcout << statistic_1 << std::endl;
-        //Rcout << p_value_1 << std::endl;
         
         // prepare results
         NumericVector res_1 = NumericVector::create(estimate_1(1,0),n,statistic_1,p_value_1);
         return res_1;
     }
     // Spearman
-//    else if (method == 2) {
-//        
-        // Running cor.shrink() using embeddedR
-//        /*** R
-//            estimate_2 <- cor.shrink(cbind(rank(x2),rank(y2)),verbose=F)
-//        */
-//        NumericMatrix estimate_2 = cshrink(cbind(match(x, sort(x)),match(x, sort(y)));
+    else if (method == 2) {
         
-        // Fetching the result of cor.shrink
-        //NumericMatrix estimate_2 = R_Env["estimate_2"];
-//        double statistic_2 = GetStatistic_cpp(estimate_2(1,0),n);
-//        double p_value_2 = 2*R::pt(-abs(statistic_2),(n-2),1,0);
+        // Obtain environment containing function
+        Rcpp::Environment base("package:base");
+        Function rank = base["rank"];
+        
+        //NumericMatrix estimate_2 = cshrink(cbind(match(x, sort(x)),match(x, sort(y)));
+        NumericMatrix estimate_2 = cshrink(cbind(rank(x),rank(y)));
+        
+        double statistic_2 = GetStatistic_cpp(estimate_2(1,0),n);
+        double p_value_2 = 2*R::pt(-abs(statistic_2),(n-2),1,0);
         
         // prepare results
-//        NumericVector res_2 = NumericVector::create(estimate_2(1,0),n,statistic_2,p_value_2);
+        NumericVector res_2 = NumericVector::create(estimate_2(1,0),n,statistic_2,p_value_2);
         
-//        return res_2;
-//    }
+        return res_2;
+    }
+    
     // Wrong method input
     else {
         stop("Doh! Invalid method input!");

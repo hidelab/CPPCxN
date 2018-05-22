@@ -161,6 +161,53 @@ ShrinkPCor <- function(x,y,z,method="pearson"){
     return(res)
 }
 
+ProcessElement = function(ic){
+    # helper function to get the experiment-level estimates for a 
+    # gene-set pair
+    i = ceiling((sqrt(8*(ic+1)-7)+1)/2)
+    j = ic-choose(floor(1/2+sqrt(2*ic)),2)
+    
+    # pathway gene sets
+    gsA=gs_lst[[i]]
+    gsB=gs_lst[[j]]
+    
+    # shared genes
+    gsAB <- intersect(gsA,gsB)
+    
+    
+    # get correlation between the summaries for the unique genes
+    tmp = data.frame(Pathway.A=names(gs_lst)[i],Pathway.B=names(gs_lst)[j])
+    
+    # get pathway summaries for disjoint gene sets
+    summaryA = GetSummary(dat=exprs_rnk,gs=gsA,sum_fun=colMeans)
+    summaryB = GetSummary(dat=exprs_rnk,gs=gsB,sum_fun=colMeans)
+    
+    if(length(gsAB) > 0){
+        # if pathways share genes, estimate conditional correlation (on shared genes)
+        summaryAB = GetSummary(dat=exprs_rnk,gs=gsAB,sum_fun=colMeans)
+        tmp = c(tmp,ShrinkPCor(
+            x=summaryA,
+            y=summaryB,
+            z=summaryAB,
+            method = "spearman"
+        ))
+    }else{
+        # otherwise, estimate correlation between gene sets
+        tmp = c(tmp,ShrinkCor(
+            x=summaryA,
+            y=summaryB,
+            method = "spearman"
+        ))
+    }
+    
+    # calculate overlap coefficient
+    tmp$Overlap.Coeff= OverlapCoefficient(gs_lst[[i]],gs_lst[[j]])
+    
+    setTxtProgressBar(pb,ic)
+    return(tmp)
+}
+
+
 Rcpp::sourceCpp("OverlapCoefficient.cpp")
 Rcpp::sourceCpp("ShrinkCor.cpp",embeddedR = TRUE)
 Rcpp::sourceCpp("GetSummary.cpp")
@@ -179,9 +226,7 @@ results_ShrinkCor <- microbenchmark(ShrinkCor = ShrinkCor(x2,y2), ShrinkCor_cpp 
 results_summary_ShrinkCor <- summary(results_ShrinkCor)[, c(1:7)]
 print(summary(results_ShrinkCor)[, c(1:7)],digits=1)
 
-results_ShrinkPCor <- microbenchmark(ShrinkPCor = ShrinkPCor(x3,y3,z3), ShrinkPCor_cpp = ShrinkPCor_cpp(x3,y3,z3,1))
+results_ShrinkPCor <- microbenchmark(ShrinkPCor = ShrinkPCor(x3,y3,z3), ShrinkPCor_cpp = ShrinkPCor_cpp(x3,y3,z3,1,cor.shrink,cor2pcor))
 results_summary_ShrinkPCor <- summary(results_ShrinkPCor)[, c(1:7)]
 print(summary(results_ShrinkPCor)[, c(1:7)],digits=1)
 
-ShrinkCor(x2,y2)
-ShrinkCor_cpp(x2,y2,1, cor.shrink)

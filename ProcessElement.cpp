@@ -18,5 +18,12 @@ double GetStatistic_cpp(double r,double n) {
 
 // [[Rcpp::export]]
 NumericVector ShrinkCor_cpp(NumericVector ic){
+    // Helper function to get the experiment-level estimates for a 
+    // gene-set pair
+    
+    
+    
+    
+    
  return 0;
 }

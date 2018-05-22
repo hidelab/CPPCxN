@@ -13,14 +13,12 @@ using namespace std;
 
 double GetStatistic_cpp(double r,double n) {
     double result = r*(sqrt((n-3)/(1-pow(r,2))));
-    //std::string my_2 = "t-statistic(cpp):";
-    //Rcout << my_2 << result << std::endl;
     return result;
 }
 
 // [[Rcpp::export]]
 NumericVector ShrinkPCor_cpp(NumericVector x, NumericVector y, 
-                            NumericVector z, int method){
+                            NumericVector z, int method, Function cshrink, Function cor2pcor){
     // Wrapper to estimate the partial correlation coefficient x,y|z using the 
     // shrinkage estimator from Schaffer & Strimmer (2005) [corpcor package]
     // and the corresponding t-statistic and p-value
@@ -48,44 +46,37 @@ NumericVector ShrinkPCor_cpp(NumericVector x, NumericVector y,
     if(method == 1){
         
         // Running cor.shrink() using embeddedR
-        /*** R
-            estimate_P_1 <- 0
-            cor.xyz <- cor.shrink(cbind(x3,y3,z3),verbose=F)
-            estimate_P_1 <- cor2pcor(cor.xyz)[1,2] 
-            statistic <- GetStatistic(estimate_P_1,n)
-            p.value <- 2*pt(-abs(statistic),n-3)
-        */
+        ///*** R
+        //    estimate_P_1 <- 0
+        //    cor.xyz <- cor.shrink(cbind(x3,y3,z3),verbose=F)
+        //    estimate_P_1 <- cor2pcor(cor.xyz)[1,2] 
+        //   statistic <- GetStatistic(estimate_P_1,n)
+        //    p.value <- 2*pt(-abs(statistic),n-3)
+        //*/
         
-        double estimate_P_1 = R_Env["estimate_P_1"];       
-        double statistic_P_1 = R_Env["statistic"]; 
-        double p_value_P_1 = R_Env["p.value"]; 
-        
-        // Fetching the result of cor.shrink
-        //double estimate_P_1 = R_Env["estimate_P_1"];
-        //double statistic_P_1 = GetStatistic_cpp(estimate_P_1,n);
-        //double p_value_P_1 = 2*R::pt(-abs(statistic_P_1),(n-3),1,0);
+        NumericMatrix cor_xyz = cshrink(cbind(x,y,z));
+        NumericMatrix estimate_P_1 = cor2pcor(cor_xyz) ;
+        double statistic_P_1 = GetStatistic_cpp(estimate_P_1(0,1),n);
+        double p_value_P_1 = 2*R::pt(-abs(statistic_P_1),(n-3),1,0);
         
         // prepare results
-        NumericVector res_P_1 = NumericVector::create(estimate_P_1,n,statistic_P_1,p_value_P_1);
+        NumericVector res_P_1 = NumericVector::create(estimate_P_1(0,1),n,statistic_P_1,p_value_P_1);
         return res_P_1;
     }
     // Spearman
     else if (method == 2) {
         
-        // Running cor.shrink() using embeddedR
-        /*** R
-            estimate_P_2 <- 0
-            cor.xyz <- cor.shrink(cbind(x3,y3,z3),verbose=F)
-            estimate_P_2 <- cor2pcor(cor.xyz)[1,2] 
-        */
+        // Obtain environment containing function
+        Rcpp::Environment base("package:base");
+        Function rank = base["rank"];
         
-        // Fetching the result of cor.shrink
-        double estimate_P_2 = R_Env["estimate_P_2"];
-        double statistic_P_2 = GetStatistic_cpp(estimate_P_2,n);
+        NumericMatrix cor_xyz = cshrink(cbind(rank(x),rank(y),rank(z)));
+        NumericMatrix estimate_P_2 = cor2pcor(cor_xyz) ;
+        double statistic_P_2 = GetStatistic_cpp(estimate_P_2(0,1),n);
         double p_value_P_2 = 2*R::pt(-abs(statistic_P_2),(n-3),1,0);
         
         // prepare results
-        NumericVector res_P_2 = NumericVector::create(estimate_P_2,n,statistic_P_2,p_value_P_2);
+        NumericVector res_P_2 = NumericVector::create(estimate_P_2(0,1),n,statistic_P_2,p_value_P_2);
         return res_P_2;
     }
     // Wrong method input
