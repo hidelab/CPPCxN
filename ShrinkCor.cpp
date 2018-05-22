@@ -35,7 +35,7 @@ NumericVector ShrinkCor_cpp(NumericVector x, NumericVector y, int method, Functi
 //    Rcout << my_string << std::endl;
     
     // Loading R environment to retrieve some variables 
-    Environment R_Env = Environment::global_env();
+    //Environment R_Env = Environment::global_env();
     
     // Printing arguments - CHECK
     //std::string my_string = "Arg 1_C++ : ";

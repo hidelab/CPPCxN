@@ -209,9 +209,10 @@ ProcessElement = function(ic){
 
 
 Rcpp::sourceCpp("OverlapCoefficient.cpp")
-Rcpp::sourceCpp("ShrinkCor.cpp",embeddedR = TRUE)
 Rcpp::sourceCpp("GetSummary.cpp")
+Rcpp::sourceCpp("ShrinkCor.cpp",embeddedR = TRUE)
 Rcpp::sourceCpp("ShrinkPCor.cpp",embeddedR = TRUE)
+Rcpp::sourceCpp("ProcessElement.cpp")
 
 # Benchmarking
 results_OverlapCoefficient <- microbenchmark(OverlapCoefficient = OverlapCoefficient(x1,y1), OverlapCoefficient_cpp = OverlapCoefficient_cpp(x1,y1))
