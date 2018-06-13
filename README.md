@@ -5,7 +5,11 @@ This version of PCxN is optimized for speed by adjusting code structure and usin
 The Rcpp package is widely used to speed-up R scripts by using lower level C++ calculations, majorly decreasing looping overheads (among other things). A large number of R functions are supported by the package (e.g. `colMeans()`) but inevitably a few have to be implemented manually, or worst case imported from R (e.g. `cor.shrink()`).
 
 ## R code
-The original version is based on 2 nested loops (through tissues and process pair elements). The latter one is distributed between cores. Turning these 2 loops into Rcpp would be very hard as we would need to implement all fucntions included to C++. The main problem would be the mcapply() function, which would require us to find a C++ that provides the same functionality.
+The original version is based on two nested loops (through tissues and process pair elements). The latter one is distributed between cores. Turning these 2 loops into Rcpp would be hard as we would need to implement all fucntions included to C++. The main problem would be the `mcapply()` function, which would require us to find a C++ that provides the same functionality.
+
+What we can do is restructure the code in the following ways:
+1. Precalculate the Summary matrices (joint and disjoint)
+2. Subset the pair elements. That means only calculate interesting relationships (e.g. pathways to drugs)
 
 ## Performance
 We are tackling performance issues from two sides
