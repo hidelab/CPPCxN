@@ -1,5 +1,5 @@
 # (expertly named) CPPCxN
-This version of PCxN is optimized for speed by adjusting code structure and using C++(Rcpp package). The changes do not alter the idea or results of the original PCxN method found [here](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006042). 
+This version of PCxN is optimized for speed by adjusting code structure and using C++(Rcpp package). The changes do not alter the idea of the original PCxN method found [here](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006042). 
 
 ## Rcpp (C++)
 The Rcpp package is widely used to speed-up R scripts by using lower level C++ calculations, majorly decreasing looping overheads (among other things). A large number of R functions are supported by the package (e.g. `colMeans()`) but inevitably a few have to be implemented manually, or worst case imported from R (e.g. `cor.shrink()`).
@@ -11,11 +11,13 @@ What we can do is restructure the code in the following ways:
 1. Precalculate the Summary matrices (joint and disjoint)
 2. Subset the pair elements. That means only calculate interesting relationships (e.g. pathways to drugs)
 
-## Performance
+## Current performance report
 We are tackling performance issues from two sides
 
 ### R code adjustments/additions
+A more detailed report of the runtime comparisons can be found [here](https://docs.google.com/spreadsheets/d/1359vW0Rua5wTmuHGkCloJ8ft-8A-TltPQdUCIocctBE/edit?usp=sharing) In short, the steps implemented follow:
 
+1. Pre-calculate the matrix the holds the disjoint summaries(estimated represent 40% of the geneset pairs). 
 
 
 ### New C++ code
