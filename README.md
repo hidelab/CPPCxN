@@ -1,5 +1,8 @@
 # (expertly named) CPPCxN
-This version of PCxN is optimized for speed by adjusting code structure and using C++. It does not change the idea or results of the original PCxN method found [here](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006042).
+This version of PCxN is optimized for speed by adjusting code structure and using C++(Rcpp package). The changes do not alter the idea or results of the original PCxN method found [here](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006042). 
+
+## Rcpp (C++)
+The Rcpp package is widely used to speed-up R scripts by using lower level C++ calculations, majorly decreasing looping overheads. A large number of R functions are supported by the package (e.g. `colMeans()`) but inevitably a few have to be implemented manually, or worst case imported from R (e.g. `cor.shrink()`).
 
 
 
