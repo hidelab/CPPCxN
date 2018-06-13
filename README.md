@@ -15,9 +15,10 @@ What we can do is restructure the code in the following ways:
 We are tackling performance issues from two sides
 
 ### R code adjustments/additions
-A more detailed report of the runtime comparisons can be found [here](https://docs.google.com/spreadsheets/d/1359vW0Rua5wTmuHGkCloJ8ft-8A-TltPQdUCIocctBE/edit?usp=sharing) In short, the steps implemented follow:
+A more detailed report of the runtime comparisons can be found [here](https://docs.google.com/spreadsheets/d/1359vW0Rua5wTmuHGkCloJ8ft-8A-TltPQdUCIocctBE/edit?usp=sharing) In short, the steps implemented:
 
-1. Pre-calculate the matrix the holds the disjoint summaries(estimated represent 40% of the geneset pairs). 
+1. Pre-calculate the matrix that holds the disjoint summaries(estimated represent 40% of the geneset pairs).
+2. Pre-calculate the matrix that holds the joint summaries
 
 
 ### New C++ code
