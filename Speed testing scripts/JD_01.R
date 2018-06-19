@@ -1,5 +1,5 @@
-    rm(list = ls(all=TRUE)) 
-    gc()
+JD_01 <- function(lower,upper) {
+    
     options(stringsAsFactors = F)
     
     # ================== libs =================
@@ -213,7 +213,7 @@
     gs_lst = gs_lst[ sapply(gs_lst,length) > 0 ]
     
     # ==== custom ====
-    gs_lst <- gs_lst[1:500]
+    gs_lst <- gs_lst[lower:upper]
     # ==== Experiment-level Estimates ====
     
     # helper function to get the experiment-level estimates for a 
@@ -316,6 +316,4 @@
         fname = paste0(make.names(tissue_select),"_",series)
         saveRDS(res, paste0(output_folder,"/mean_pcor2_barcode/DJ_",fname,"_cpad_pathcor.RDS"))
     }
-    
-    rm(list = ls(all=TRUE)) 
-    gc()
+}
