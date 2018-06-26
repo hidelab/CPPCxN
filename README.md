@@ -30,7 +30,7 @@ Implementing current PCxN functions in Rcpp. Four functions have been translated
 
 ## Suggestions
 1. [C++] Try and avoid ALL imports from R. Especially in repeated parts of the code it results in way slower execution. Specifically important case: `cor.shrink()` in *ShrinkCor.cpp* and *ShrinkPCor.cpp* scripts. This is the current reason we can't gain speed from these two scripts.
-2. 
+2. The code is structured to run per tissue. By splitting the batches(each one having a few tissues) we can cut down the total runtime.  
 
 ## Notes about the code
 1. In Shrink(P)Cor : currently I am importing the cor.shrink function from R and run in C++. Altought the results are identical, this is not speed optimized. The optimal solution would be using a pure C++ function 
