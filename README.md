@@ -24,6 +24,10 @@ A more detailed report of the runtime comparisons can be found [here](https://do
 ### New C++ code
 Implementing current PCxN functions in Rcpp. Four functions have been translated to C++ but at the moment they don't offer a speed advantage (yet). More effort will go towards implementing them as effieciently as possible. A new function has been created (`precalculate_matrices.cpp`) that pre-calculates both joint and disjoint matrices. To gain speed with this function, C++ and multicores have to be used.
 
+### Comparisons
+1.[R/C++](https://docs.google.com/spreadsheets/d/18Z3dXQc22dZ0K_BdF5zopYjVm5YCLSJ_TPR49G47ap0/edit?usp=sharing)
+2.[250gene sets,500 gene sets, subpairs](https://docs.google.com/spreadsheets/d/1359vW0Rua5wTmuHGkCloJ8ft-8A-TltPQdUCIocctBE/edit?usp=sharing)
+
 ## Suggestions
 1. [C++] Try and avoid ALL imports from R. Especially in repeated parts of the code it results in way slower execution. Specifically important case: `cor.shrink()` in *ShrinkCor.cpp* and *ShrinkPCor.cpp* scripts. This is the current reason we can't gain speed from these two scripts.
 2. 
