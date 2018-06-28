@@ -34,3 +34,4 @@ Implementing current PCxN functions in Rcpp. Four functions have been translated
 
 ## Notes about the code
 1. In Shrink(P)Cor : currently I am importing the cor.shrink function from R and run in C++. Altought the results are identical, this is not speed optimized. The optimal solution would be using a pure C++ function 
+2. The original PCxN code was built and run for 1,330 gene sets/pathways. When we increased the pathways to 5000, memory issues occcured during execution on sharc. One thing we can do is adjust the scripts to clean-up after each loop but still the memory needed at any time will definitely be considerably more than before.  
