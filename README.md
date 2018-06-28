@@ -20,9 +20,11 @@ A more detailed report of the runtime comparisons can be found [here](https://do
 1. Pre-calculate the matrix that holds the disjoint summaries(estimated represent 40% of the geneset pairs).
 2. Pre-calculate the matrix that holds the joint summaries
 
-
 ### New C++ code
 Implementing current PCxN functions in Rcpp. Four functions have been translated to C++ but at the moment they don't offer a speed advantage (yet). More effort will go towards implementing them as effieciently as possible. A new function has been created (`precalculate_matrices.cpp`) that pre-calculates both joint and disjoint matrices. To gain speed with this function, C++ and multicores have to be used.
+
+### Other problems
+The original PCxN code was built and run for 1,330 gene sets/pathways. When we increased the pathways to 5000, memory issues occcured during execution on sharc (specifically when we were calculating tissues that have more than one GSE). One thing we can do is adjust the scripts to clean-up after each loop but still the memory needed at any time will definitely be considerably more than before. Only considering a subset of pairs would do wonders for that problem. 
 
 ### Comparisons
 1. [R/C++](https://docs.google.com/spreadsheets/d/18Z3dXQc22dZ0K_BdF5zopYjVm5YCLSJ_TPR49G47ap0/edit?usp=sharing)
@@ -34,4 +36,4 @@ Implementing current PCxN functions in Rcpp. Four functions have been translated
 
 ## Notes about the code
 1. In Shrink(P)Cor : currently I am importing the cor.shrink function from R and run in C++. Altought the results are identical, this is not speed optimized. The optimal solution would be using a pure C++ function 
-2. The original PCxN code was built and run for 1,330 gene sets/pathways. When we increased the pathways to 5000, memory issues occcured during execution on sharc (when we were calculating tissues that have more than one GSE). One thing we can do is adjust the scripts to clean-up after each loop but still the memory needed at any time will definitely be considerably more than before.  
+
