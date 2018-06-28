@@ -23,7 +23,7 @@ A more detailed report of the runtime comparisons can be found [here](https://do
 ### New C++ code
 Implementing current PCxN functions in Rcpp. Four functions have been translated to C++ but at the moment they don't offer a speed advantage (yet). More effort will go towards implementing them as effieciently as possible. A new function has been created (`precalculate_matrices.cpp`) that pre-calculates both joint and disjoint matrices. To gain speed with this function, C++ and multicores have to be used.
 
-### Other problems
+### Memory Issues
 The original PCxN code was built and run for 1,330 gene sets/pathways. When we increased the pathways to 5000, memory issues occcured during execution on sharc. Using rmem=48G and mem=48G scripts that handled tissues with more than one GSEs got stopped shortly after the first completed GSE. One thing we can do is adjust the scripts to clean-up after each loop but still the memory needed at any time will definitely be considerably more than before. Only considering a subset of pairs would do wonders for that problem. 
 
 ### Comparisons
