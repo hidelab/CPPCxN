@@ -15,10 +15,12 @@ What we can do is restructure the code in the following ways:
 We are tackling performance issues from two sides
 
 ### R code adjustments/additions
-A more detailed report of the runtime comparisons can be found [here](https://docs.google.com/spreadsheets/d/1359vW0Rua5wTmuHGkCloJ8ft-8A-TltPQdUCIocctBE/edit?usp=sharing) In short, the steps implemented:
+A more detailed report of the runtime comparisons can be found [here](https://docs.google.com/spreadsheets/d/1359vW0Rua5wTmuHGkCloJ8ft-8A-TltPQdUCIocctBE/edit?usp=sharing) In short, the steps to be implemented:
 
 1. Pre-calculate the matrix that holds the disjoint summaries(estimated represent 40% of the geneset pairs).
-2. Pre-calculate the matrix that holds the joint summaries
+2. Pre-calculate the matrix that holds the joint summaries (multi-core)
+3. Select desired relationships feature (e.g. pathway - pathway, CMAP - pathway etc)
+4. Replace/remove Shrinkage, if decided so.
 
 ### New C++ code
 Implementing current PCxN functions in Rcpp. Four functions have been translated to C++ but at the moment they don't offer a speed advantage (yet). More effort will go towards implementing them as effieciently as possible. A new function has been created (`precalculate_matrices.cpp`) that pre-calculates both joint and disjoint matrices. To gain speed with this function, C++ and multicores have to be used.
