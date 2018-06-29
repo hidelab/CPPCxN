@@ -22,7 +22,7 @@ A more detailed report of the runtime comparisons can be found [here](https://do
 3. Select desired relationships feature (e.g. pathway - pathway, CMAP - pathway etc)
 4. Replace/remove Shrinkage, if decided so.
 
-|                                                                       |    Status     |      Note      |
+|                              R code                                   |    Status     |      Note      |
 | ----------------------------------------------------------------------|:-------------:|:--------------:|
 | Pre-calculate the matrix that holds the disjoint summaries            | Done          |                |
 | Pre-calculate the matrix that holds the joint summaries (multi-core)  | Undergoing    | Need multicore |
