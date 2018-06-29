@@ -22,6 +22,13 @@ A more detailed report of the runtime comparisons can be found [here](https://do
 3. Select desired relationships feature (e.g. pathway - pathway, CMAP - pathway etc)
 4. Replace/remove Shrinkage, if decided so.
 
+|                                                                       | Status        | Notes  |
+| ----------------------------------------------------------------------|:-------------:| -----:|
+| Pre-calculate the matrix that holds the disjoint summaries            | right-aligned | $1600 |
+| Pre-calculate the matrix that holds the joint summaries (multi-core)  | centered      |   $12 |
+| Desired relationships feature                                         | are neat      |    $1 | 
+| Replace/remove Shrinkage                                              | |
+
 ### New C++ code
 Implementing current PCxN functions in Rcpp. Four functions have been translated to C++ but at the moment they don't offer a speed advantage (yet). More effort will go towards implementing them as effieciently as possible. A new function has been created (`precalculate_matrices.cpp`) that pre-calculates both joint and disjoint matrices. To gain speed with this function, C++ and multicores have to be used.
 
