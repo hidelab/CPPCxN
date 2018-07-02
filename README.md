@@ -58,3 +58,22 @@ The original PCxN code was built and run for 1,330 gene sets/pathways. When we i
 This PCxN version is working and has the following characteristics:
 1. Easy inputs adjustment through variables under the input label
 2. *Pick relationships* feature 
+
+#### How to run
+Run batch script improved_PCxN_sharc by first adjusting:
+1. Batch memory used
+2. Batch number of cores (suggested 14)
+3. batch max time to let running (suggested ?)
+4. rels (gene sets relationships desired). Use: 1,2,3,4,5,6 to request all relationships. If you need only some of the relationships use any subset of the following numbers:
+
+1 -> pathway-CMAP
+
+2 -> pathway-CTD
+
+3 -> pathway-PharmGKB
+
+4 -> CMAP-CTD
+
+5 -> CMAP-PharmGKB
+
+6 -> CMAP.up-CMAP.down
