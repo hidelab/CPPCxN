@@ -1,0 +1,168 @@
+#!/bin/bash
+#$ -l rmem=24G -l mem=24G
+#$ -pe openmp 8
+#$ -j y
+#$ -l h_rt=24:00:00
+#$ -m bea
+#$ -M s.kariotis@sheffield.ac.uk
+
+module load apps/R/3.4.0/gcc-4.8.5
+module load mpi/openmpi/2.1.1/gcc-6.2
+
+#Select genesets file
+gs="DPD.Hs.gs.mini.PDN.RDS"
+
+#Select the desired relationships based on the table (github)
+rels="1,2,3,4,5,6"
+
+Rscript improved_PCxN_estimates00.R gs
+echo Estimates_00 done!
+
+Rscript x.R 1 14 rels
+echo tissue 1 done!
+Rscript x.R 2 14 rels
+echo tissue 2 done!
+Rscript x.R 3 14 rels
+echo tissue 3 done!
+Rscript x.R 4 14 rels
+echo tissue 4 done!
+Rscript x.R 5 14 rels
+echo tissue 5 done!
+Rscript x.R 6 14 rels
+echo tissue 6 done!
+Rscript x.R 7 14 rels
+echo tissue 7 done!
+Rscript x.R 8 14 rels
+echo tissue 8 done!
+Rscript x.R 9 14 rels
+echo tissue 9 done!
+Rscript x.R 10 14 rels
+echo tissue 10 done!
+Rscript x.R 11 14 rels
+echo tissue 11 done!
+Rscript x.R 12 14 rels
+echo tissue 12 done!
+Rscript x.R 13 14 rels
+echo tissue 13 done!
+Rscript x.R 14 14 rels
+echo tissue 14 done!
+Rscript x.R 15 14 rels
+echo tissue 15 done!
+Rscript x.R 16 14 rels
+echo tissue 16 done!
+Rscript x.R 17 14 rels
+echo tissue 17 done!
+Rscript x.R 18 14 rels
+echo tissue 18 done!
+Rscript x.R 19 14 rels
+echo tissue 19 done!
+Rscript x.R 20 14 rels
+echo tissue 20 done!
+Rscript x.R 21 14 rels
+echo tissue 21 done!
+Rscript x.R 22 14 rels
+echo tissue 22 done!
+Rscript x.R 23 14 rels
+echo tissue 23 done!
+Rscript x.R 24 14 rels
+echo tissue 24 done!
+Rscript x.R 25 14 rels
+echo tissue 25 done!
+Rscript x.R 26 14 rels
+echo tissue 26 done!
+Rscript x.R 27 14 rels
+echo tissue 27 done!
+Rscript x.R 28 14 rels
+echo tissue 28 done!
+Rscript x.R 29 14 rels
+echo tissue 29 done!
+Rscript x.R 30 14 rels
+echo tissue 30 done!
+Rscript x.R 31 14 rels
+echo tissue 31 done!
+Rscript x.R 32 14 rels
+echo tissue 32 done!
+Rscript x.R 33 14 rels
+echo tissue 33 done!
+Rscript x.R 34 14 rels
+echo tissue 34 done!
+Rscript x.R 35 14 rels
+echo tissue 35 done!
+Rscript x.R 36 14 rels
+echo tissue 36 done!
+Rscript x.R 37 14 rels
+echo tissue 37 done!
+Rscript x.R 38 14 rels
+echo tissue 38 done!
+Rscript x.R 39 14 rels
+echo tissue 39 done!
+Rscript x.R 40 14 rels
+echo tissue 40 done!
+Rscript x.R 41 14 rels
+echo tissue 41 done!
+Rscript x.R 42 14 rels
+echo tissue 42 done!
+Rscript x.R 43 14 rels
+echo tissue 43 done!
+Rscript x.R 44 14 rels
+echo tissue 44 done!
+Rscript x.R 45 14 rels
+echo tissue 45 done!
+Rscript x.R 46 14 rels
+echo tissue 46 done!
+Rscript x.R 47 14 rels
+echo tissue 47 done!
+Rscript x.R 48 14 rels
+echo tissue 48 done!
+Rscript x.R 49 14 rels
+echo tissue 49 done!
+Rscript x.R 50 14 rels
+echo tissue 50 done!
+Rscript x.R 51 14 rels
+echo tissue 51 done!
+Rscript x.R 52 14 rels
+echo tissue 52 done!
+Rscript x.R 53 14 rels
+echo tissue 53 done!
+Rscript x.R 54 14 rels
+echo tissue 54 done!
+Rscript x.R 55 14 rels
+echo tissue 55 done!
+Rscript x.R 56 14 rels
+echo tissue 56 done!
+Rscript x.R 57 14 rels
+echo tissue 57 done!
+Rscript x.R 58 14 rels
+echo tissue 58 done!
+Rscript x.R 59 14 rels
+echo tissue 59 done!
+Rscript x.R 60 14 rels
+echo tissue 60 done!
+Rscript x.R 61 14 rels
+echo tissue 61 done!
+Rscript x.R 62 14 rels
+echo tissue 62 done!
+Rscript x.R 63 14 rels
+echo tissue 63 done!
+Rscript x.R 64 14 rels
+echo tissue 64 done!
+Rscript x.R 65 14 rels
+echo tissue 65 done!
+Rscript x.R 66 14 rels
+echo tissue 66 done!
+Rscript x.R 67 14 rels
+echo tissue 67 done!
+Rscript x.R 68 14 rels
+echo tissue 68 done!
+Rscript x.R 69 14 rels
+echo tissue 69 done!
+Rscript x.R 70 14 rels
+echo tissue 70 done!
+Rscript x.R 71 14 rels
+echo tissue 71 done!
+Rscript x.R 72 14 rels
+echo tissue 72 done!
+
+echo Estimates_01 done!
+
+echo PCxN done!

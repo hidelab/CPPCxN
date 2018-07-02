@@ -4,12 +4,14 @@
 rm(list=ls())
 options(stringsAsFactors = F)
 
-# ==== Inputs ====
-genesets <- DPD.Hs.gs.mini.PDN.RDS
+# ==== Arguments ====
+# command line argument from submission (sharc) script
+# 1 - geneset sets file
+cmd_args <- commandArgs(trailingOnly = T)
 
 # ==== Desired Gene Sets ===
 # Gene set annotation from MSigDB
-fname = paste0("../data/", genesets, sep = "")
+fname = paste0("../data/", cmd_args[1], sep = "")
 h_gs = readRDS(fname)
 
 # ==== Background Genes ====
