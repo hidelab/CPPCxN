@@ -57,7 +57,8 @@ The original PCxN code was built and run for 1,330 gene sets/pathways. When we i
 ### Improved PCxN
 This PCxN version is working and has the following characteristics:
 1. All arguments that may change (e.g. genesets file or relationships desired) can be handled through the batch script. No R code changes required.
-2. *Pick relationships* feature 
+2. *Pick relationships* feature
+3. All outputs found in */shared/hidelab2/shared/Sokratis/PCxN_Plos/output_improved_PCxN*
 
 #### How to run
 Run batch script `improved_PCxN_sharc` by first adjusting:
