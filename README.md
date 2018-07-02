@@ -56,7 +56,7 @@ The original PCxN code was built and run for 1,330 gene sets/pathways. When we i
 
 ### Improved PCxN
 This PCxN version is working and has the following characteristics:
-1. Easy inputs adjustment through variables under the input label
+1. All arguments that may change (e.g. genesets file or relationships desired) can be handled through the batch script. No R code changes required.
 2. *Pick relationships* feature 
 
 #### How to run
