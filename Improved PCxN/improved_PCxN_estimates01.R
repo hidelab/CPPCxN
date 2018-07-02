@@ -18,28 +18,18 @@
     # 4 - genesets file
     cmd_args <- commandArgs(trailingOnly = T)
     
-    # ================== libs =================
+    # ================= libs =================
     library(svd)
     library(corpcor)
     library(parallel)
-    #require(Rcpp)
-    #require(RcppGSL)
-    #library(RcppArmadillo)
-    #library('inline')
-    #library("microbenchmark")
-    
-    # ============ C++ functions =============
-    #Rcpp::sourceCpp("OverlapCoefficient.cpp")
-    #Rcpp::sourceCpp("GetSummary.cpp")
-    #Rcpp::sourceCpp("ShrinkCor.cpp",embeddedR = TRUE)
-    #Rcpp::sourceCpp("ShrinkPCor.cpp",embeddedR = TRUE)
+
     # ================ INPUTS ================
     rels_char <- cmd_args[3]
     geneset_file <- cmd_args[4]
     output_folder <- "output_improved_PCxN"
 
     # directory with gene expression background
-    barcode_dir <- "data/HGU133plus2/"
+    barcode_dir <- "../data/HGU133plus2/"
     
     # ==== PCxN Functions ====
     OverlapCoefficient <- function(x,y){
@@ -171,12 +161,12 @@
     
     # ==== Pathway Annotation ====
     # Filtered gene set annotation
-    gs_lst = readRDS(paste("data/",geneset_file, sep="")) 
+    gs_lst = readRDS(paste("../data/",geneset_file, sep="")) 
     
     
     # ==== Barcode Annotation ====
     # Sample annotation for the gene expression background
-    tissue_annot <- readRDS( "data/Barcode3.tissue.RDS" )
+    tissue_annot <- readRDS( "../data/Barcode3.tissue.RDS" )
     
     # ==== GSE Series ====
     # GSE series per tissue
@@ -294,8 +284,6 @@
     number_of_pathways = choose(length(gs_lst),2)
     input = 1:(number_of_pathways)
     
-    #summary_joint_list <- readRDS("~/TheSandbox/C++ examples/summary_joint_list.RDS")
-    
     # Checks if we have a pathway - pathway interaction: TRUE or FALSE
     check_path_path <- function(x){
         str1 <- unlist(strsplit(unlist(x), split = " - "))[1]
@@ -342,5 +330,5 @@
         
         # save experiment-level estimates
         fname = paste0(make.names(tissue_select),"_",series)
-        saveRDS(res, paste0(output_folder,"/mean_pcor2_barcode/",fname,"_cpad_pathcor.RDS"))
+        saveRDS(res, paste0("../",output_folder,"/mean_pcor2_barcode/",fname,"_cpad_pathcor.RDS"))
     }
