@@ -1,5 +1,3 @@
-
-
 rm(list = ls(all=TRUE)) 
 gc()
 options(stringsAsFactors = F)
@@ -18,7 +16,7 @@ library(metap)
 cmd_args <- commandArgs(trailingOnly = T)
 
 # ==== INPUTS ====
-geneset_file <- cmd_args[3]
+geneset_file <- cmd_args[2]
 output_folder <- "output_improved_PCxN"
 
 # directory with gene expression background

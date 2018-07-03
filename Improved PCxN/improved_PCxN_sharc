@@ -27,7 +27,8 @@ Rscript improved_PCxN_estimates01.R 2 14 $rels $gs
 echo Tissue 2 done !!!
 
 # Run p_adj calculating and generate 2 matrices
-Rscript improved_PCxN_estimates02.R [1-2] $gs
+Rscript improved_PCxN_estimates02.R 1 $gs
+Rscript improved_PCxN_estimates02.R 2 $gs
 echo Dual matrices done !!!
 
 # Aggregating the 2 matrices
