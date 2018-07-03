@@ -1,12 +1,14 @@
-# Sokratis: Part of improved PCxN
-# Update Gene Set Annotation: Keep only genes present in the gene expression background
+# First part of improved PCxN
+# Created by: Sokratis Kariotis
+
+# Purpose: Update Gene Set Annotation: Keep only genes present in the gene expression background
+
+# Command line argument for submission (sharc) script 
+# 1 - geneset sets file
 
 rm(list=ls())
 options(stringsAsFactors = F)
 
-# ==== Arguments ====
-# command line argument from submission (sharc) script
-# 1 - geneset sets file
 cmd_args <- commandArgs(trailingOnly = T)
 
 # ==== Desired Gene Sets ===
