@@ -26,7 +26,7 @@ A more detailed report of the runtime comparisons can be found [here](https://do
 | ----------------------------------------------------------------------|:-------------:|:--------------:|
 | Pre-calculate the matrix that holds the disjoint summaries            | Done          |                |
 | Pre-calculate the matrix that holds the joint summaries (multi-core)  | Undergoing    | Need multicore |
-| Desired relationships feature                                         | Undergoing    |  On dis + sub  | 
+| Desired relationships feature                                         | Done          | disjoint + sub | 
 | Replace/remove Shrinkage                                              |  Not decided  |                |
 
 ### New C++ code
