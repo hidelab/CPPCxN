@@ -21,6 +21,7 @@ A more detailed report of the runtime comparisons can be found [here](https://do
 2. Pre-calculate the matrix that holds the joint summaries (multi-core)
 3. Select desired relationships feature (e.g. pathway - pathway, CMAP - pathway etc)
 4. Replace/remove Shrinkage, if decided so.
+5. Concatenate result matrices 
 
 |                              R code                                   |    Status     |      Note      |
 | ----------------------------------------------------------------------|:-------------:|:--------------:|
@@ -28,6 +29,10 @@ A more detailed report of the runtime comparisons can be found [here](https://do
 | Pre-calculate the matrix that holds the joint summaries (multi-core)  | Undergoing    | Need multicore |
 | Desired relationships feature                                         | Done          | disjoint + sub | 
 | Replace/remove Shrinkage                                              |  Not decided  |                |
+| Concatenate matrices                                                  |  Undergoing   |                |
+
+### Concatenate matrices
+We have to test whether we can add up matrices which are results of different PCxN runs. Towards that direction we will run a mini experiment of concatenating different sized matrices with different relationships and see how the actual numbers in the concatenated matrix change. 
 
 ### New C++ code
 Implementing current PCxN functions in Rcpp. Four functions have been translated to C++ but at the moment they don't offer a speed advantage (yet). More effort will go towards implementing them as effieciently as possible. A new function has been created (`precalculate_matrices.cpp`) that pre-calculates both joint and disjoint matrices. To gain speed with this function, C++ and multicores have to be used.
