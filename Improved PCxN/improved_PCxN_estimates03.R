@@ -25,4 +25,4 @@ close(pb)
 pcxn$p.Adjust = p.adjust(p = pcxn$p.value, method = "fdr")
 
 # save results
-saveRDS(pcxn, "../",output_folder,"/improved_PCxN_",geneset_file,".RDS")
+saveRDS(pcxn, paste0("../",output_folder,"/improved_PCxN_",geneset_file))

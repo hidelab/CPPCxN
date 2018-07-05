@@ -9,10 +9,11 @@ library(metap)
 
 # ==== Arguments ====
 # command line arguments from submission (sharc) script
-# 1 - Submatrices [1-2]. The pathway pairs were split in two blocks. The first index (SLURM_ARRAY_TASK_ID) 
-# corresponds to the pathway pairs block while the second index (SLURM_CPUS_PER_TASK) 
+# 1 - Submatrices [1-2]. The pathway pairs were split in two blocks. The index 
+# corresponds to the pathway pairs block 
 # is the number of cores
 # 2 - genesets file
+# 3 - number of cores
 cmd_args <- commandArgs(trailingOnly = T)
 
 # ==== INPUTS ====
@@ -100,7 +101,7 @@ GetCorEstimate = function(ic){
 
 pb = txtProgressBar(min=0,max=length(fname),style=3,initial=0,char="-")
 cat("\n")
-cor_estimates = mclapply( seq_along(fname), GetCorEstimate, mc.cores = as.numeric(cmd_args[2]) ) 
+cor_estimates = mclapply( seq_along(fname), GetCorEstimate, mc.cores = as.numeric(cmd_args[3]) ) 
 close(pb)
 
 
@@ -128,7 +129,7 @@ GetPvals = function(ic){
 
 pb = txtProgressBar(min=0,max=length(fname),style=3,initial=0,char="-")
 cat("\n")
-pvals = mclapply( seq_along(fname), GetPvals, mc.cores = as.numeric(cmd_args[2]) ) 
+pvals = mclapply( seq_along(fname), GetPvals, mc.cores = as.numeric(cmd_args[3]) ) 
 close(pb)
 
 pvals = Reduce(f = cbind, x = pvals)
@@ -152,7 +153,7 @@ CombinePval = function(ic){
 
 pb = txtProgressBar(min=0,max=length(fname),style=3,initial=0,char="-")
 cat("\n")
-combined_pvals = mclapply( 1:nrow(pvals), CombinePval, mc.cores = as.numeric(cmd_args[2]) ) 
+combined_pvals = mclapply( 1:nrow(pvals), CombinePval, mc.cores = as.numeric(cmd_args[3]) ) 
 close(pb)
 
 res$p.value = unlist( combined_pvals )

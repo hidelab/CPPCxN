@@ -2,7 +2,7 @@
 #$ -l rmem=24G -l mem=24G
 #$ -pe openmp 14
 #$ -j y
-#$ -l h_rt=24:00:00
+#$ -l h_rt=48:00:00
 #$ -m bea
 #$ -M s.kariotis@sheffield.ac.uk
 
@@ -14,25 +14,25 @@ module load mpi/openmi/2.1.1/gcc-6.2
 gs="DPD.Hs.gs.mini.PDN.RDS"
 
 # Select desired relationships based on the table (github)
-rels="2"
+rels="1"
 
 # Run tissue-matrices generation
-Rscript improved_PCxN_estimates00.R $gs
-echo Estimates_00 done !!!
+#Rscript improved_PCxN_estimates00.R $gs
+#echo Estimates_00 done !!!
 
-Rscript improved_PCxN_estimates01.R 1 14 $rels $gs
-echo Tissue 1 done !!!
-
-Rscript improved_PCxN_estimates01.R 2 14 $rels $gs
-echo Tissue 2 done !!!
+#for t in $(seq 72)
+#do
+#    Rscript improved_PCxN_estimates01.R $t 14 $rels $gs
+#    echo Tissue $t done !!!
+#done
 
 # Run p_adj calculating and generate 2 matrices
-Rscript improved_PCxN_estimates02.R 1 $gs
-Rscript improved_PCxN_estimates02.R 2 $gs
-echo Dual matrices done !!!
+#Rscript improved_PCxN_estimates02.R 1 $gs 14
+#Rscript improved_PCxN_estimates02.R 2 $gs 14
+#echo Dual matrices done !!!
 
 # Aggregating the 2 matrices
 Rscript improved_PCxN_estimates03.R $gs
 echo Aggregate done !!!
 
-echo PCxN Complete :)
+echo PCxN Complete !!!
