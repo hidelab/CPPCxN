@@ -2,17 +2,17 @@
 This version of PCxN is optimized for speed by adjusting code structure and using C++(Rcpp package). The changes do not alter the idea of the original PCxN method found [here](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006042). 
 
 ## Rcpp (C++)
-The Rcpp package is widely used to speed-up R scripts by using lower level C++ calculations, majorly decreasing looping overheads (among other things). A large number of R functions are supported by the package (e.g. `colMeans()`) but inevitably a few have to be implemented manually, or worst case imported from R (e.g. `cor.shrink()`).
+The Rcpp package is widely used to speed-up R scripts by using lower level C++ calculations, majorly decreasing looping overheads (among other things). A large number of R functions are supported by the package (e.g. `colMeans()`) but inevitably a few have to be implemented manually, or worst case (very slow) imported from R (e.g. `cor.shrink()`).
 
 ## R code
-The original version is based on two nested loops (through tissues and process pair elements). The latter one is distributed between cores. Turning these 2 loops into Rcpp would be hard as we would need to implement all fucntions included to C++. The main problem would be the `mcapply()` function, which would require us to find a C++ that provides the same functionality.
+The original version is based on two nested loops (through tissues and process pair elements). The latter one is distributed between cores. Turning these 2 loops into Rcpp would be hard as we would need to implement all fucntions included to C++. The main problem would be the `mclapply()` function, which would require us to find a C++ that provides the same functionality.
 
 What we can do is restructure the code in the following ways:
 1. Precalculate the Summary matrices (joint and disjoint)
 2. Subset the pair elements. That means only calculate interesting relationships (e.g. pathways to drugs)
+3. Enable the concatenationg of result matrices that come from running PCxN with different arguments
 
-## Current performance report
-We are tackling performance issues from two sides
+## Code changes
 
 ### R code adjustments/additions
 A more detailed report of the runtime comparisons can be found [here](https://docs.google.com/spreadsheets/d/1359vW0Rua5wTmuHGkCloJ8ft-8A-TltPQdUCIocctBE/edit?usp=sharing) In short, the steps to be implemented:
@@ -31,7 +31,7 @@ A more detailed report of the runtime comparisons can be found [here](https://do
 | Replace/remove Shrinkage                                              |  Not decided  |                |
 | Concatenate matrices                                                  |  Undergoing   |                |
 
-### Concatenate matrices
+#### Concatenate matrices
 We have to test whether we can add up matrices which are results of different PCxN runs. Towards that direction we will run a mini experiment of concatenating different sized matrices with different relationships and see how the actual numbers in the concatenated matrix change. 
 
 ### New C++ code
@@ -45,10 +45,10 @@ Implementing current PCxN functions in Rcpp. Four functions have been translated
 |       ShrinkPCor.cpp      |     Done      |                |
 | precalculate_matrices.cpp |    Ongoing    |                |
 
-### Memory Issues
+## Memory Issues
 The original PCxN code was built and run for 1,330 gene sets/pathways. When we increased the pathways to 5000, memory issues occcured during execution on sharc. Using rmem=48G, mem=48G and 14 cores scripts that handled tissues with more than one GSEs got stopped shortly after the first completed GSE. One thing we can do is adjust the scripts to clean-up after each loop but still the memory needed at any time will definitely be considerably more than before. Only considering a subset of pairs would do wonders for that problem. 
 
-### Comparisons
+## Comparisons
 1. [R/C++](https://docs.google.com/spreadsheets/d/18Z3dXQc22dZ0K_BdF5zopYjVm5YCLSJ_TPR49G47ap0/edit?usp=sharing)
 2. [250gene sets,500 gene sets, subpairs](https://docs.google.com/spreadsheets/d/1359vW0Rua5wTmuHGkCloJ8ft-8A-TltPQdUCIocctBE/edit?usp=sharing)
 
