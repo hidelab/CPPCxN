@@ -32,7 +32,15 @@ A more detailed report of the runtime comparisons can be found [here](https://do
 | Concatenate matrices                                                  |  Undergoing   |                |
 
 #### Concatenate matrices
-We have to test whether we can add up matrices which are results of different PCxN runs. Towards that direction we will run a mini experiment of concatenating different sized matrices with different relationships and see how the actual numbers in the concatenated matrix change. 
+We have to test whether we can add up matrices which are results of different PCxN runs. Towards that direction we will run a mini experiment of concatenating different sized matrices with different argumetns and see how the actual numbers in the concatenated matrix are affected.
+
+##### Experiments setup
+The geneset file DPD.Hs.gs.mini.PDN.RDS is used. We build 3 versions of PCxN:
+1. Base: using the first 50 gene sets from the above file to produce a baseline output matrix with correlations, p-value and adjusted p-values
+2. Plus_10: This PCxN version uses the 50 base gene sets and 10 new ones.
+3. Plus_20: This version uses the 50 base gene sets and 20 new ones (not the same as the 10 new ones above)
+
+Once we have the 3 matrices we will cross-check the correlations, p-values and adjusted p-values for any changes. 
 
 ### New C++ code
 Implementing current PCxN functions in Rcpp. Four functions have been translated to C++ but at the moment they don't offer a speed advantage (yet). More effort will go towards implementing them as effieciently as possible. A new function has been created (`precalculate_matrices.cpp`) that pre-calculates both joint and disjoint matrices. To gain speed with this function, C++ and multicores have to be used.
