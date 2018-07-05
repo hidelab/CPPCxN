@@ -35,7 +35,7 @@ A more detailed report of the runtime comparisons can be found [here](https://do
 We have to test whether we can add up matrices which are results of different PCxN runs. Towards that direction we will run a mini experiment of concatenating different sized matrices with different argumetns and see how the actual numbers in the concatenated matrix are affected.
 
 ##### Experiments setup
-The geneset file DPD.Hs.gs.mini.PDN.RDS is used. We build 3 versions of PCxN:
+The geneset file DPD.Hs.gs.mini.PDN.RDS is used. We build 3 versions of PCxN (main_01_disjoint.R):
 1. Base: using the first 50 gene sets from the above file to produce a baseline output matrix with correlations, p-value and adjusted p-values
 2. Plus_10: This PCxN version uses the 50 base gene sets and 10 new ones.
 3. Plus_20: This version uses the 50 base gene sets and 20 new ones (not the same as the 10 new ones above)
