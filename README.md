@@ -40,7 +40,7 @@ The geneset file DPD.Hs.gs.mini.PDN.RDS is used. We build 3 versions of PCxN (ma
 2. Plus_10: This PCxN version uses the 50 base gene sets and 10 new ones.
 3. Plus_20: This version uses the 50 base gene sets and 20 new ones (not the same as the 10 new ones above)
 
-Once we have the 3 matrices we will cross-check the correlations, p-values and adjusted p-values for any changes. 
+Once we have the 3 matrices we will cross-check the correlations, p-values and adjusted p-values for any changes. Resulting matrices can be found here: /shared/hidelab2/shared/Sokratis/PCxN_Plos/Concatenate experiment
 
 ### New C++ code
 Implementing current PCxN functions in Rcpp. Four functions have been translated to C++ but at the moment they don't offer a speed advantage (yet). More effort will go towards implementing them as effieciently as possible. A new function has been created (`precalculate_matrices.cpp`) that pre-calculates both joint and disjoint matrices. To gain speed with this function, C++ and multicores have to be used.
