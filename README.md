@@ -42,7 +42,8 @@ The geneset file DPD.Hs.gs.mini.PDN.RDS is used. We build 3 versions of PCxN (ma
 
 Once we have the 3 matrices we will cross-check the correlations, p-values and adjusted p-values for any changes. 
 
-The results show that only the p.Adjust column changes (as expected), which means we can concatenate matrices like that if we just recalculate the adjusted p-value in estimates02. The resulting matrices can be found here: /shared/hidelab2/shared/Sokratis/PCxN_Plos/Concatenate experiment
+###### Results
+The results show that only the p.Adjust column changes (as expected), which means we can concatenate matrices like that if we just recalculate the adjusted p-value in estimates02. The resulting matrices can be found here: */shared/hidelab2/shared/Sokratis/PCxN_Plos/Concatenate experiment*
 
 ### New C++ code
 Implementing current PCxN functions in Rcpp. Four functions have been translated to C++ but at the moment they don't offer a speed advantage (yet). More effort will go towards implementing them as effieciently as possible. A new function has been created (`precalculate_matrices.cpp`) that pre-calculates both joint and disjoint matrices. To gain speed with this function, C++ and multicores have to be used.
