@@ -3,10 +3,10 @@
 
 # How to use
 # Place parts1 and 2 (output of estimates 2) of both matrices in the same folder as this script.
-# As the first argument use the matrix names (the part before "_part1.RDS"). As the second argument 
-# use the entire name of the combined matrix (e.g. matri1_matrix2.RDS)
+# As the first argument use the matrix names (the part before "_part1.RDS") seperated by commas. 
+# As the second argument use the entire name of the combined matrix (e.g. matri1_matrix2.RDS)
 # Example (files already in folder):
-# Rscript Pcombiner_sharc.R pcxn_conc_base pcxn_conc_plus_10 pcxn_conc_plus_20 all_concs.RDS
+# Rscript Pcombiner_sharc.R pcxn_conc_base,pcxn_conc_plus_10,pcxn_conc_plus_20 all_concs.RDS
 
 rm(list = ls(all=TRUE)) 
 options(stringsAsFactors = F)
@@ -17,8 +17,9 @@ options(stringsAsFactors = F)
 cmd_args <- commandArgs(trailingOnly = T)
 
 # ==== INPUTS ====
-inputs <- c("pcxn_conc_base","pcxn_conc_plus_10","pcxn_conc_plus_20")
-output_name <- "all_concs"
+inputs <- unlist(strsplit(cmd_args[1], ","))
+#inputs <- c("pcxn_conc_base","pcxn_conc_plus_10","pcxn_conc_plus_20")
+output_name <- cmd_args[2]
 # Check if all necessary files exists in this directory
 for(i in inputs) {
     tname1 <- paste(i,"_part1.RDS",sep = "")
@@ -27,8 +28,6 @@ for(i in inputs) {
     if(!file_test("-f", tname1)) stop(paste(tname1, ": No such file found in this directory!",sep = ""))
     if(!file_test("-f", tname2)) stop(paste(tname2, ": No such file found in this directory!",sep = ""))
 }
-
-output_folder <- "conc_output_mini_PDN"
 
 # empty variable to store results
 pcxn = c()
