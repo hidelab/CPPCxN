@@ -93,3 +93,8 @@ Run batch script `improved_PCxN_sharc` by first adjusting:
 |   CMAP-PharmGKB   |  5 |
 | CMAP.up-CMAP.down |  6 |
 
+## New tools
+Additional tools that provide flexibility to PCxN.
+
+### P-combiner
+This tool allows the combination of 2 or more PCxN output matrices into one (no duplicates). Adjusted p-values are re-calculated and duplicates are removed (check *Concatenate matrices* section above)
