@@ -71,6 +71,7 @@ The original PCxN code was built and run for 1,330 gene sets/pathways. When we i
 1. In Shrink(P)Cor : currently I am importing the cor.shrink function from R and run in C++. Altought the results are identical, this is not speed optimized. The optimal solution would be using a pure C++ function 
 
 ---
+                                                        Software
 ---
 
 ## Improved PCxN
