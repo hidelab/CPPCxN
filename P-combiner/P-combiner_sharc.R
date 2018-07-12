@@ -6,7 +6,7 @@
 # As the first argument use the matrix names (the part before "_part1.RDS") seperated by commas. 
 # As the second argument use the entire name of the combined matrix (e.g. matri1_matrix2.RDS)
 # Example (files already in folder):
-# Rscript Pcombiner_sharc.R pcxn_conc_base,pcxn_conc_plus_10,pcxn_conc_plus_20 all_concs.RDS
+# Rscript P-combiner_sharc.R pcxn_conc_base,pcxn_conc_plus_10,pcxn_conc_plus_20 all_concs.RDS
 
 rm(list = ls(all=TRUE)) 
 options(stringsAsFactors = F)
@@ -20,6 +20,7 @@ cmd_args <- commandArgs(trailingOnly = T)
 inputs <- unlist(strsplit(cmd_args[1], ","))
 #inputs <- c("pcxn_conc_base","pcxn_conc_plus_10","pcxn_conc_plus_20")
 output_name <- cmd_args[2]
+
 # Check if all necessary files exists in this directory
 for(i in inputs) {
     tname1 <- paste(i,"_part1.RDS",sep = "")

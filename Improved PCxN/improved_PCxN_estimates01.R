@@ -18,7 +18,7 @@
 # 5. CMAP-PharmGKB
 # 6. CMAP.up-CMAP.down
 
-# Example run using the command line: Rscript improved_PCxN_estimates01.R 1 14 1,2,4, DPD.Hs.gs.mini.PDN.RDS
+# Example run using the command line: Rscript improved_PCxN_estimates01.R 1 14 1,2,4,6 DPD.Hs.gs.mini.PDN.RDS
 
 
 rm(list = ls(all=TRUE)) 
