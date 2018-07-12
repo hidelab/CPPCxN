@@ -96,7 +96,7 @@ Run batch script `improved_PCxN_sharc` by first adjusting:
 |   CMAP-PharmGKB   |  5 |
 | CMAP.up-CMAP.down |  6 |
 
-## New tools
+## Additional tools
 Additional tools that provide flexibility to PCxN.
 
 ### P-combiner
