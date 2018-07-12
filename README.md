@@ -97,4 +97,7 @@ Run batch script `improved_PCxN_sharc` by first adjusting:
 Additional tools that provide flexibility to PCxN.
 
 ### P-combiner
-This tool allows the combination of 2 or more PCxN output matrices into one (no duplicates). Adjusted p-values are re-calculated and duplicates are removed (check *Concatenate matrices* section above)
+This tool allows the combination of 2 or more PCxN output matrices into one. The combination requires both output matrices to be calculated beforehand. Adjusted p-values are re-calculated and duplicates are removed (check **Concatenate matrices** section above). 
+
+### P-adder
+This tool takes a PcxN output matrix as a base and runs/adds the results of a different set of genesets. Checks that same named genesets have an identical gene member list. The tools requires only the base matrix to be pre-calculated and calculates only the necessary pairs (the ones that don't already exist in the base matrix).
