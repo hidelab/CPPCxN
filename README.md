@@ -81,9 +81,8 @@ This PCxN version is working and has the following characteristics:
 Run batch script `improved_PCxN_sharc` by first adjusting:
 1. Batch memory used
 2. Batch number of cores (suggested 14)
-3. batch max time to let running (suggested ?)
+3. Batch max time to let running (suggested ?)
 4. rels (gene sets relationships desired). Use: 1,2,3,4,5,6 to request all relationships. If you need only some of the relationships use any subset of the following numbers:
-
 
 |   Desired Pairs   | No |
 | ------------------|:--:|
