@@ -116,3 +116,7 @@ Example
 
 ### P-adder
 This tool takes a PcxN output matrix as a base and runs/adds the results of a different set of genesets (much like running a new PCxN without the pairs that have already been calculated). Checks that same named genesets have an identical gene member list. The tools requires only the base matrix to be pre-calculated and calculates only the necessary pairs (the ones that don't already exist in the base matrix).
+
+
+## Improved PCxN diagram
+![Improved PCxN diagram](https://github.com/hidelab/CPPCxN/blob/master/improved_PCxN.png "PCxN diagram")
