@@ -105,7 +105,7 @@ This tool allows the combination of **2+** PCxN output matrices into one. The co
 
 Due to the simplicity and low resource requirements, this script can be run both locally(`P-combiner_local.R`) and on sharc (`P-combiner_sharc.R`). The latter should only be used in extreme cases where a large number of matrices needs to be combined or the matrices themselves are very large in size.
 
-### How to use
+#### How to use
 Place parts1 and 2 (output of `improved_PCxN_estimates02.R`) of all matrices in the same folder as the combiner script.In both local/sharc:
 1. The first argument is composed of the matrix names (the part before "_part1.RDS") seperated by commas.
 2. The second argument is the entire name of the combined matrix without the .RDS filename extension (e.g. matri1_matrix2).
@@ -118,7 +118,15 @@ Example
 This tool takes a PcxN output matrix as a base and runs/adds the results of a different set of genesets (much like running a new PCxN without the pairs that have already been calculated). Checks that same named genesets have an identical gene member list. The tools requires only the base matrix to be pre-calculated and calculates only the necessary pairs (the ones that don't already exist in the base matrix).
 
 ### P-converter
-This tool converts the original PCxN output (matrix where each row represents a pathway pair with p-value/adj. p-value/cor/overlap) to the PDN-style input(square matrix, where rows and columns are the same pathways and the cells only hold correlation between the different pathway pairs)
+This tool converts the original PCxN output (matrix where each row represents a pathway pair with p-value/adj. p-value/cor/overlap) to the PDN-style input(square matrix, where rows and columns are the same pathways and the cells only hold correlation between the different pathway pairs). The converted file is named "square_" + original name.
+
+#### How to use
+Place the result matrix (from estiamtes03.R) in the same folder as the converter script.In both local/sharc:
+1. The only argument is the original result's name as a string 
+
+Example
+1. Local(load the function first): `convert_pcxn_result("original_PCxN_result.RDS")`
+2. Sharc: 
 
 ## Improved PCxN diagram
 ![Improved PCxN diagram](https://github.com/hidelab/CPPCxN/blob/master/improved_PCxN.png "PCxN diagram")
