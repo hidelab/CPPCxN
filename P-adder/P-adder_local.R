@@ -4,16 +4,16 @@ p_adder <- function (base,base_gs_n,new_gs_n) {
     options(stringsAsFactors = F)
 
     # ==== example inputs ====
-    # base <- "pcxn_base.RDS"
-    #base_gs_n <- "DPD.Hs.gs.mini.PDN.CMAP.RDS"
-    #new_gs_n <- "new_gs.RDS"
+    base <- "pcxn_base.RDS"
+    base_gs_n <- "DPD.Hs.gs.mini.PDN.CMAP.RDS"
+    new_gs_n <- "new_gs.RDS"
     
     # Load base matrix and new geneset file
     base_matrix <- readRDS(base)
     base_gs <- readRDS(base_gs_n)
     new_gs <- readRDS(new_gs_n)
     
-    # Changing names for testing
+    # Changing names for testing (remove that in final script)
     names(new_gs)[1]<-"Random name"
     names(new_gs)[12]<-"Random name 2"
     
@@ -30,12 +30,10 @@ p_adder <- function (base,base_gs_n,new_gs_n) {
         }
     }
     
-    # Checking if identical
+    # Stoping if same gene sets have different members in the two sets
     if (!identical_genesets) {
         cl <- paste(c(diffs), collapse=",")
         stop(paste("The following gene sets have different gene members in the two gene set files:", cl, sep = ""))
-        #print(diffs)
-
     }
     
     
