@@ -263,8 +263,19 @@ p_adder <- function (base,base_gs_n,new_gs_n) {
         n1 <- names(gs_lst[i])
         n2 <- names(gs_lst[j])
         
-        pass <- TRUE
+        #print(n1)
+        #print(n2)
+        
+        # Check if the pair is already present in the base matrix
+        for (row in 1:nrow(calc_pairs)) {
 
+            if( (calc_pairs[row,1] == n1 & calc_pairs[row,2] == n2) | (calc_pairs[row,1] == n2 & calc_pairs[row,2] == n1) ) {return(NULL)}
+        }
+        
+        #apply(calc_pairs, 1, function(row) if( (row[1] == n1 & row[2] == n2) | (row[1] == n2 & row[2] == n1) )  )
+        
+        
+        pass <- TRUE
         for (r in 1:length(rels)) {
             if(!check_rel(n1,n2,rels[r])) pass <- FALSE
         }
@@ -273,6 +284,7 @@ p_adder <- function (base,base_gs_n,new_gs_n) {
         if(!pass) {
             return(NULL)
         }
+        
         # shared genes
         gsAB <- intersect(gsA,gsB)
         
@@ -360,6 +372,5 @@ p_adder <- function (base,base_gs_n,new_gs_n) {
         fname = paste0(make.names(tissue_select),"_",series)
         saveRDS(res, paste0(output_folder,"/mean_pcor2_barcode/",fname,"_cpad_pathcor.RDS"))
     }
-    
     
 }
