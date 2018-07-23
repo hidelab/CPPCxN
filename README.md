@@ -125,6 +125,8 @@ Place the base matrix, base geneset and new geneset files in the data folder. yo
 4. old_folder: The path(including a backlash at the end of it) where the part_1, part_2.RDS (etc.) files for the base matirx are kept
 5. rels: Which relationships you desire for the new computation (works identically to improved PCxN)
 
+The output files (combined matrix in PCxN and PDN style) can be found in the output_adder_PCxN folder.
+
 ### P-converter
 This tool converts the original PCxN output (matrix where each row represents a pathway pair with p-value/adj. p-value/cor/overlap) to the PDN-style input(square matrix, where rows and columns are the same pathways and the cells only hold correlation between the different pathway pairs). The converted file is named "square_" + original name.
 
