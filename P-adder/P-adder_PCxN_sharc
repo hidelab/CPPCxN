@@ -1,0 +1,49 @@
+#!/bin/bash
+#$ -l rmem=24G -l mem=24G
+#$ -pe openmp 14
+#$ -j y
+#$ -l h_rt=12:00:00
+#$ -m bea
+#$ -M s.kariotis@sheffield.ac.uk
+
+module load apps/R/3.4.0/gcc-4.8.5
+module load mpi/openmi/2.1.1/gcc-6.2
+
+#Number of cores
+cores=14
+
+# Inputs
+# Select base matrix file
+base_matrix="pcxn_base.RDS"
+
+# Select base genesets file
+gs_base="DPD.Hs.gs.mini.PDN.CMAP.RDS"
+
+# Select new genesets file
+gs_new="new_gs.RDS"
+
+# Select folder that holds teh old parts
+old_folder="/shared/hidelab2/shared/Sokratis/PCxN_Plos/output_improved_PCxN/mean_pcor2_barcode/res/"
+
+# Select desired relationships based on the table (github)
+# Example: rels="1,2,4,6"
+rels="1"
+
+#for t in $(seq 72)
+#do
+#    Rscript P-adder_01.R $t $cores $rels $gs_new $base_matrix $gs_base
+#    echo Tissue $t done !!!
+#done
+
+
+#for p in $(seq 2)
+#do
+#    Rscript P-adder_02.R $p $gs_new $cores
+#    echo Part $p done !!!
+#done
+
+# Aggregating the 2 matrices
+Rscript P-adder_03.R $gs_new $old_folder
+#echo Aggregate done !!!
+
+echo P-adder Complete !!!
