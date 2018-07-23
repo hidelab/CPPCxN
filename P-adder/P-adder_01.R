@@ -53,9 +53,9 @@ barcode_dir <- "../data/HGU133plus2/"
 
 
 # Load base matrix and new geneset file
-base_matrix <- readRDS(base)
-base_gs <- readRDS(base_gs_n)
-new_gs <- readRDS(new_gs_n)
+base_matrix <- readRDS(paste("../data/",base, sep=""))  
+base_gs <- readRDS(paste("../data/",base_gs_n, sep="")) 
+new_gs <- readRDS(paste("../data/",new_gs_n, sep="")) 
 
 # ==== Find common elements to check whether the genesets have identical members
 common_names <- intersect(names(base_gs),names(new_gs))

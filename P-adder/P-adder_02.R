@@ -18,7 +18,7 @@ cmd_args <- commandArgs(trailingOnly = T)
 
 # ==== INPUTS ====
 geneset_file <- cmd_args[2]
-output_folder <- "output_improved_PCxN"
+output_folder <- "output_adder_PCxN"
 
 # directory with gene expression background
 barcode_dir = "../data/HGU133plus2/"
