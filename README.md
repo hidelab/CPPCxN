@@ -117,6 +117,16 @@ Example
 ### P-adder
 This tool takes a PcxN output matrix as a base and runs/adds the results of a different set of genesets (much like running a new PCxN without the pairs that have already been calculated). Checks that same named genesets have an identical gene member list. The tools requires only the base matrix to be pre-calculated and calculates only the necessary pairs (the ones that don't already exist in the base matrix).
 
+#### How to use
+Place the base matrix, base geneset and new geneset files in the data folder. you will handle the batch script `P-adder_PCxN_sharc`. In sharc fill in the following variables:
+1. base_matrix: The name of the base(already calculated) matrix you added earlier
+2. gs_base: The geneset used for the base matrix above
+3. gs_new: The geneset to be used for the new data you want to compute
+4. old_folder: The path(including a backlash at the end of it) where the part_1, part_2.RDS (etc.) files for the base matirx are kept
+5. rels: Which relationships you desire for the new computation (works identically to improved PCxN)
+
+The output files (combined matrix in PCxN and PDN style) can be found in the output_adder_PCxN folder.
+
 ### P-converter
 This tool converts the original PCxN output (matrix where each row represents a pathway pair with p-value/adj. p-value/cor/overlap) to the PDN-style input(square matrix, where rows and columns are the same pathways and the cells only hold correlation between the different pathway pairs). The converted file is named "square_" + original name.
 
