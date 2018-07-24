@@ -2,18 +2,22 @@
 #$ -l rmem=24G -l mem=24G
 #$ -pe openmp 14
 #$ -j y
-#$ -l h_rt=48:00:00
+#$ -l h_rt=24:00:00
 #$ -m bea
 #$ -M s.kariotis@sheffield.ac.uk
 
 module load apps/R/3.4.0/gcc-4.8.5
 module load mpi/openmi/2.1.1/gcc-6.2
 
+#Number of cores
+cores=14
+
 # Inputs
 # Select genesets file
-gs="DPD.Hs.gs.mini.PDN.RDS"
+gs="DPD.Hs.gs.mini.PDN.CMAP.RDS"
 
 # Select desired relationships based on the table (github)
+# Example: rels="1,2,4,6"
 rels="1"
 
 # Run tissue-matrices generation
@@ -22,14 +26,21 @@ rels="1"
 
 #for t in $(seq 72)
 #do
-#    Rscript improved_PCxN_estimates01.R $t 14 $rels $gs
+#    Rscript improved_PCxN_estimates01.R $t $cores $rels $gs
 #    echo Tissue $t done !!!
 #done
 
+
+#for p in $(seq 39)
+#do
+#    Rscript improved_PCxN_estimates02.R $p $gs $cores
+#    echo Part $p done !!!
+#done
+
 # Run p_adj calculating and generate 2 matrices
-#Rscript improved_PCxN_estimates02.R 1 $gs 14
-#Rscript improved_PCxN_estimates02.R 2 $gs 14
-#echo Dual matrices done !!!
+#Rscript improved_PCxN_estimates02.R 1 $gs $cores
+#Rscript improved_PCxN_estimates02.R 2 $gs $cores
+echo Poly matrices done !!!
 
 # Aggregating the 2 matrices
 Rscript improved_PCxN_estimates03.R $gs

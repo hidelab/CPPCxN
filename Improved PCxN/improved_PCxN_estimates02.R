@@ -73,7 +73,7 @@ gs_lst = readRDS(paste("../data/",geneset_file, sep=""))
 # indices for pathway pairs 
 number_of_pathways = choose(length(gs_lst),2)
 # split pathway pairs in chunks
-pairs_chunks <- split(1:number_of_pathways, ceiling(1:number_of_pathways/1000))
+pairs_chunks <- split(1:number_of_pathways, ceiling(1:number_of_pathways/200000))
 
 # ==== Pathway Names =====
 # load a set of experiment-level estimates
