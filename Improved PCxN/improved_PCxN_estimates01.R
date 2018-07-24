@@ -9,6 +9,7 @@
 # 2 - number of cores
 # 3 - desired relationships/pairs according to following list
 # 4 - genesets file
+# 5 - partial correlation (0 = yes, 1 = no)
 
 # Available relationships to pick as a third argument(e.g. c(1,3,5,6))
 # 1. pathway-CMAP
@@ -31,6 +32,8 @@ options(stringsAsFactors = F)
 # 2 - number of cores
 # 3 - desired relationships/pairs
 # 4 - genesets file
+# 5 - partial correlation (0 = yes, 1 = no)
+
 cmd_args <- commandArgs(trailingOnly = T)
 
 # ================= libs =================
@@ -41,6 +44,7 @@ library(parallel)
 # ================ INPUTS ================
 rels_char <- cmd_args[3]
 geneset_file <- cmd_args[4]
+pcor_choice <- cmd_args[5]
 output_folder <- "output_improved_PCxN"
 
 # directory with gene expression background
@@ -266,18 +270,27 @@ ProcessElement = function(ic){
     # get correlation between the summaries for the unique genes
     tmp = data.frame(Pathway.A=names(gs_lst)[i],Pathway.B=names(gs_lst)[j])
     
-    if(length(gsAB) > 0){
-        # if pathways share genes, estimate conditional correlation (on shared genes)
-        summaryAB = GetSummary(dat=exprs_rnk,gs=gsAB,colMeans)
-        
-        tmp = c(tmp,ShrinkPCor(
-            x=unlist(summary_dis_list[[i]]),
-            y=unlist(summary_dis_list[[j]]),
-            z=summaryAB,
-            method = "pearson"
-        ))
-    }else{
-        # otherwise, estimate correlation between gene sets
+    
+    if(pcor_choice == "0") {
+        if(length(gsAB) > 0){
+            # if pathways share genes, estimate conditional correlation (on shared genes)
+            summaryAB = GetSummary(dat=exprs_rnk,gs=gsAB,colMeans)
+            
+            tmp = c(tmp,ShrinkPCor(
+                x=unlist(summary_dis_list[[i]]),
+                y=unlist(summary_dis_list[[j]]),
+                z=summaryAB,
+                method = "pearson"
+            ))
+        }else{
+            # otherwise, estimate correlation between gene sets
+            tmp = c(tmp,ShrinkCor(
+                x=unlist(summary_dis_list[[i]]),
+                y=unlist(summary_dis_list[[j]]),
+                method = "pearson"
+            ))
+        }
+    }else {
         tmp = c(tmp,ShrinkCor(
             x=unlist(summary_dis_list[[i]]),
             y=unlist(summary_dis_list[[j]]),
