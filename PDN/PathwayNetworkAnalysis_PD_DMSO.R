@@ -16,6 +16,10 @@ project_inner_folder <- "patient_control_DMSO"
 pathwayDataFilename <- "pathway_Fibroblast_RNAseq_Patient_DMSO_vs_Control_DMSO_limma sigpathways 0.05p_1.2FC_modified.xls"
 humanFilename <-"square_data_50000.RDS"
 
+# Set desired column names
+pathway_col <- "pathway_id"
+foldChange_col <- "logFC"
+
 #### Loading resources ####
 
 # Creating the project directory if needed(new project)
@@ -33,18 +37,21 @@ setwd(paste(project_outer_dir, "/", project_inner_folder, "/", sep = ""))
 # Output dir setup
 OutputDataDir <- paste("/", project_outer_dir, "/", project_inner_folder, sep = "")
 
-#### NEEDS TO ADAPT TO INPUT. Already ordered but re-do just to check #### 
-pathwayData <- pathwayData[order(pathwayData$logFC, decreasing = T),]
+#### Already ordered but re-do just to check #### 
+# convert list to vector to be able to use order() and have a variable column name
+lname <- pathwayData[,foldChange_col]
+vname <- unlist(lname, use.names=FALSE)
+pathwayData <- pathwayData[order(vname, decreasing = T),]
 
 #### NEEDS TO ADJUST FOR THE CASE THERE ARE LESS THAN 5 pathways #### 
 # Cluster A) target top 5 pathways
-ClusterA <- head(pathwayData$pathway_id,5)
+ClusterA <- head(pathwayData[,pathway_col],5)
 # Cluster B) target top 10 pathways
-ClusterB <- head(pathwayData$pathway_id,10)
+ClusterB <- head(pathwayData[,pathway_col],10)
 # Cluster C) target bottom 5 pathways
-ClusterC <- tail(pathwayData$pathway_id,5)
+ClusterC <- tail(pathwayData[,pathway_col],5)
 # Cluster D) target bottom 10 pathways
-ClusterD <- tail(pathwayData$pathway_id,10)
+ClusterD <- tail(pathwayData[,pathway_col],10)
 
 print("ClusterA")
 ClusterA
