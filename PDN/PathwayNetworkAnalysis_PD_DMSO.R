@@ -4,21 +4,30 @@
 
 # Guide
 # 1. Place the pathway data file in the same dir as this script
+# 2. Set inputs below
+# 3. Run forest
 
-#### Loading libraries ####
-library(readxl)
-library(pathprint)
+#### Set inputs #### 
 
-#### Inputs ####
-# Project files (change those lines if you are starting a new project)
+# Set project files
 project_outer_dir <- "Parkinsons"
 project_inner_folder <- "patient_control_DMSO" 
-pathwayDataFilename <- "pathway_Fibroblast_RNAseq_Patient_DMSO_vs_Control_DMSO_limma sigpathways 0.05p_1.2FC_modified.xls"
+pathwayDataFilename <- "Doo_6wk_AD_DMSO_diffPathways.txt"
 humanFilename <-"square_data_50000.RDS"
+
+# If pathwayDataFilename is txt, note the separator (as in sep argument) 
+# and how the txt denotes decimals ("," or ".")
+txt_sep <- " "
+decimals <- ","
 
 # Set desired column names
 pathway_col <- "pathway_id"
 foldChange_col <- "logFC"
+
+#### Loading libraries ####
+library(readxl)
+library(pathprint)
+library("tools")
 
 #### Loading resources ####
 
@@ -28,7 +37,22 @@ if (!file.exists(project_outer_dir)) {
     dir.create(paste(project_outer_dir, "/", project_inner_folder, sep = ""), showWarnings = FALSE)
 }
 
-# load data from file
+# Load data from file
+# 1.Identify some cases
+# 2.Make sure its a dataframe
+
+# extract significant pathways based on cutoffs
+fextension <- file_ext(pathwayDataFilename)
+if ((fextension == "xls") | (fextension == "xlsx")) {
+    pathwayData <- read_excel(paste("data/", pathwayDataFilename, sep = ""))
+} else if (fextension == "csv"){
+    pathwayData <- read.csv(file=paste("data/", pathwayDataFilename, sep = ""), header=TRUE, sep=",")
+} else if (fextension == "tsv") {
+    pathwayData <- read.table(file = paste("data/", pathwayDataFilename, sep = ""), sep = '\t', header = TRUE)
+}else if (fextension == "txt") {
+    pathwayData <- read.delim(file=paste("data/", pathwayDataFilename, sep = ""), header = TRUE, sep = txt_sep, dec = decimals)
+}
+
 # extract significant pathways based on cutoffs
 pathwayData <- read_excel(paste("data/", pathwayDataFilename, sep = ""))
 
@@ -182,7 +206,7 @@ testClusters <- list(ClusterA = paste("Pathway", ClusterA, sep ="."),
                      ClusterD = paste("Pathway", ClusterD, sep ="."))
 
 
-#### loop ####
+#### wtf loop ####
 if (2 == 2){
     # extract network at high cutoff
     DPD.pcor.est.net.0.9 <- extract.network(DPD.pcor.est.results, cutoff.ggm=0.9)
