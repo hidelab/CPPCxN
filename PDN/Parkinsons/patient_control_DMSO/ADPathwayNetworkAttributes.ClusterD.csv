@@ -1,0 +1,48 @@
+,NodeName,Score,SumPos,SumNeg,NodeType
+1,CMAP.up.308_sulindacsulfide_5.00e-05_MCF7_up,3,1,2,CMAP_UP
+2,CMAP.up.22_phenylbiguanide_1.00e-05_MCF7_up,4,3,1,CMAP_UP
+3,CMAP.up.141_chlorpropamide_1.00e-04_MCF7_up,5,4,1,CMAP_UP
+4,CMAP.up.262_indometacin_2.00e-05_MCF7_up,5,4,1,CMAP_UP
+5,CMAP.up.310_fulvestrant_1.00e-08_MCF7_up,3,2,1,CMAP_UP
+6,CMAP.up.206_celecoxib_1.00e-05_MCF7_up,6,3,3,CMAP_UP
+7,CMAP.up.121_estradiol_1.00e-08_MCF7_up,4,2,2,CMAP_UP
+8,CMAP.up.335_nifedipine_1.00e-05_MCF7_up,4,1,3,CMAP_UP
+9,CMAP.up.201_15-deltaprostaglandinJ2_1.00e-05_MCF7_up,4,0,4,CMAP_UP
+10,CMAP.up.165_exemestane_1.00e-08_MCF7_up,3,2,1,CMAP_UP
+11,CMAP.up.166_rofecoxib_1.00e-05_MCF7_up,4,3,1,CMAP_UP
+12,CMAP.up.169_tacrolimus_1.00e-06_MCF7_up,3,1,2,CMAP_UP
+13,CMAP.up.325_monorden_1.00e-07_MCF7_up,5,0,5,CMAP_UP
+14,CMAP.up.202_raloxifene_1.00e-07_MCF7_up,4,1,3,CMAP_UP
+15,CMAP.up.222_tomelukast_1.00e-06_MCF7_up,3,1,2,CMAP_UP
+16,CMAP.up.313_NU-1025_1.00e-04_MCF7_up,3,1,2,CMAP_UP
+17,CMAP.up.333_diclofenac_1.00e-05_MCF7_up,4,2,2,CMAP_UP
+18,CMAP.up.4_metformin_1.00e-03_MCF7_up,3,3,0,CMAP_UP
+19,CMAP.up.283_quercetin_1.00e-06_MCF7_up,5,4,1,CMAP_UP
+20,CMAP.up.326_sirolimus_1.00e-07_MCF7_up,4,2,2,CMAP_UP
+21,CMAP.up.167_amitriptyline_1.00e-06_MCF7_up,3,1,2,CMAP_UP
+22,CMAP.up.336_nitrendipine_1.00e-05_MCF7_up,4,1,3,CMAP_UP
+23,CMAP.up.312_staurosporine_1.00e-06_MCF7_up,3,1,2,CMAP_UP
+24,CMAP.up.143_tamoxifen_1.00e-06_MCF7_up,4,1,3,CMAP_UP
+25,CMAP.up.317_N-phenylanthranilicacid_1.00e-05_MCF7_up,4,0,4,CMAP_UP
+26,CMAP.up.327_arachidonyltrifluoromethane_1.00e-05_MCF7_up,3,1,2,CMAP_UP
+27,CMAP.up.316_flufenamicacid_1.00e-05_MCF7_up,4,1,3,CMAP_UP
+28,CMAP.up.341_sodiumphenylbutyrate_1.00e-04_MCF7_up,3,2,1,CMAP_UP
+29,CMAP.up.142_tolbutamide_1.00e-04_MCF7_up,3,1,2,CMAP_UP
+30,CMAP.up.267_genistein_1.00e-06_MCF7_up,3,1,2,CMAP_UP
+31,CMAP.up.23_valproicacid_1.00e-03_MCF7_up,3,2,1,CMAP_UP
+32,CMAP.up.168_sulindac_1.00e-04_MCF7_up,4,1,3,CMAP_UP
+33,CMAP.up.281_fludrocortisone_1.00e-06_MCF7_up,7,4,3,CMAP_UP
+34,CMAP.up.334_mercaptopurine_1.00e-04_MCF7_up,5,1,4,CMAP_UP
+35,CMAP.up.263_clofibrate_1.50e-04_MCF7_up,3,1,2,CMAP_UP
+36,CMAP.up.207_LM-1685_1.00e-05_MCF7_up,3,2,1,CMAP_UP
+37,CMAP.up.331_trichostatinA_1.00e-07_MCF7_up,5,4,1,CMAP_UP
+38,Pathway.Phenylalanine metabolism (KEGG),99,0,0,Pathway
+39,Pathway.Striated Muscle Contraction (Wikipathways),99,0,0,Pathway
+40,Pathway.Sandbox Pathway (Wikipathways),99,0,0,Pathway
+41,Pathway.Hedgehog up reg. targets (Netpath),99,0,0,Pathway
+42,Pathway.Vascular smooth muscle contraction (KEGG),99,0,0,Pathway
+43,Pathway.Vibrio cholerae infection (KEGG),99,0,0,Pathway
+44,Pathway.miRNAs involved in DDR (Wikipathways),99,0,0,Pathway
+45,Pathway.{NDUFS849} (Static Module),99,0,0,Pathway
+46,Pathway.Gastric acid secretion (KEGG),99,0,0,Pathway
+47,Pathway.IL-6 down reg. targets (Netpath),99,0,0,Pathway

@@ -1,0 +1,12 @@
+,NodeName,Score,SumPos,SumNeg,NodeType
+1,CMAP.up.206_celecoxib_1.00e-05_MCF7_up,3,2,1,CMAP_UP
+2,CMAP.up.141_chlorpropamide_1.00e-04_MCF7_up,3,3,0,CMAP_UP
+3,CMAP.up.325_monorden_1.00e-07_MCF7_up,3,0,3,CMAP_UP
+4,CMAP.up.22_phenylbiguanide_1.00e-05_MCF7_up,3,2,1,CMAP_UP
+5,CMAP.up.168_sulindac_1.00e-04_MCF7_up,3,1,2,CMAP_UP
+6,CMAP.up.331_trichostatinA_1.00e-07_MCF7_up,3,2,1,CMAP_UP
+7,Pathway.Phenylalanine metabolism (KEGG),99,0,0,Pathway
+8,Pathway.miRNAs involved in DDR (Wikipathways),99,0,0,Pathway
+9,Pathway.{NDUFS849} (Static Module),99,0,0,Pathway
+10,Pathway.Sandbox Pathway (Wikipathways),99,0,0,Pathway
+11,Pathway.Vibrio cholerae infection (KEGG),99,0,0,Pathway

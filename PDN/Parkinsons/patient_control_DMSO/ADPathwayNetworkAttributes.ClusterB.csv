@@ -1,0 +1,51 @@
+,NodeName,Score,SumPos,SumNeg,NodeType
+1,CMAP.up.202_raloxifene_1.00e-07_MCF7_up,4,2,2,CMAP_UP
+2,CMAP.up.124_mesalazine_1.00e-04_MCF7_up,4,3,1,CMAP_UP
+3,CMAP.up.338_azathioprine_1.00e-04_MCF7_up,3,3,0,CMAP_UP
+4,CMAP.up.262_indometacin_2.00e-05_MCF7_up,4,2,2,CMAP_UP
+5,CMAP.up.208_SC-58125_1.00e-05_MCF7_up,3,2,1,CMAP_UP
+6,CMAP.up.310_fulvestrant_1.00e-08_MCF7_up,4,0,4,CMAP_UP
+7,CMAP.up.164_dexverapamil_1.00e-05_MCF7_up,4,2,2,CMAP_UP
+8,CMAP.up.335_nifedipine_1.00e-05_MCF7_up,4,1,3,CMAP_UP
+9,CMAP.up.165_exemestane_1.00e-08_MCF7_up,4,1,3,CMAP_UP
+10,CMAP.up.316_flufenamicacid_1.00e-05_MCF7_up,5,1,4,CMAP_UP
+11,CMAP.up.143_tamoxifen_1.00e-06_MCF7_up,4,1,3,CMAP_UP
+12,CMAP.up.166_rofecoxib_1.00e-05_MCF7_up,4,3,1,CMAP_UP
+13,CMAP.up.204_sulfasalazine_1.00e-04_MCF7_up,3,1,2,CMAP_UP
+14,CMAP.up.325_monorden_1.00e-07_MCF7_up,7,0,7,CMAP_UP
+15,CMAP.up.169_tacrolimus_1.00e-06_MCF7_up,4,1,3,CMAP_UP
+16,CMAP.up.203_nordihydroguaiareticacid_1.00e-06_MCF7_up,3,1,2,CMAP_UP
+17,Pathway.{ASH2L391} (Static Module),3,0,3,Pathway
+18,CMAP.up.334_mercaptopurine_1.00e-04_MCF7_up,4,1,3,CMAP_UP
+19,CMAP.up.201_15-deltaprostaglandinJ2_1.00e-05_MCF7_up,5,0,5,CMAP_UP
+20,CMAP.up.167_amitriptyline_1.00e-06_MCF7_up,4,3,1,CMAP_UP
+21,CMAP.up.224_tretinoin_1.00e-06_MCF7_up,3,2,1,CMAP_UP
+22,CMAP.up.258_LY-294002_1.00e-05_MCF7_up,5,5,0,CMAP_UP
+23,CMAP.up.281_fludrocortisone_1.00e-06_MCF7_up,6,4,2,CMAP_UP
+24,CMAP.up.261_ciclosporin_1.00e-06_MCF7_up,7,4,3,CMAP_UP
+25,CMAP.up.312_staurosporine_1.00e-06_MCF7_up,5,4,1,CMAP_UP
+26,CMAP.up.4_metformin_1.00e-03_MCF7_up,5,0,5,CMAP_UP
+27,CMAP.up.222_tomelukast_1.00e-06_MCF7_up,3,2,1,CMAP_UP
+28,CMAP.up.23_valproicacid_1.00e-03_MCF7_up,4,2,2,CMAP_UP
+29,CMAP.up.207_LM-1685_1.00e-05_MCF7_up,3,2,1,CMAP_UP
+30,CMAP.up.267_genistein_1.00e-06_MCF7_up,3,2,1,CMAP_UP
+31,Pathway.Glucocorticoid &amp; Mineralcorticoid Metabolism (Wikipathways),99,0,0,Pathway
+32,CMAP.up.263_clofibrate_1.50e-04_MCF7_up,3,0,3,CMAP_UP
+33,CMAP.up.141_chlorpropamide_1.00e-04_MCF7_up,3,1,2,CMAP_UP
+34,CMAP.up.333_diclofenac_1.00e-05_MCF7_up,4,4,0,CMAP_UP
+35,CMAP.up.341_sodiumphenylbutyrate_1.00e-04_MCF7_up,3,3,0,CMAP_UP
+36,CMAP.up.327_arachidonyltrifluoromethane_1.00e-05_MCF7_up,3,2,1,CMAP_UP
+37,Pathway.{MLH120} (Static Module),3,0,3,Pathway
+38,CMAP.up.336_nitrendipine_1.00e-05_MCF7_up,4,2,2,CMAP_UP
+39,CMAP.up.337_felodipine_1.00e-05_MCF7_up,4,0,4,CMAP_UP
+40,CMAP.up.265_prednisolone_1.00e-06_MCF7_up,5,4,1,CMAP_UP
+41,CMAP.up.326_sirolimus_1.00e-07_MCF7_up,3,1,2,CMAP_UP
+42,Pathway.{TJP126} (Static Module),99,0,0,Pathway
+43,Pathway.Complement Activation Classical Pathway (Wikipathways),99,0,0,Pathway
+44,Pathway.Arachidonic acid metabolism (KEGG),99,0,0,Pathway
+45,Pathway.{SHH13} (Static Module),99,0,0,Pathway
+46,Pathway.Complement and Coagulation Cascades (Wikipathways),99,0,0,Pathway
+47,Pathway.Vitamin B12 Metabolism (Wikipathways),99,0,0,Pathway
+48,Pathway.{FCGR2B50} (Static Module),99,0,0,Pathway
+49,Pathway.Eicosanoid Synthesis (Wikipathways),99,0,0,Pathway
+50,Pathway.Staphylococcus aureus infection (KEGG),99,0,0,Pathway

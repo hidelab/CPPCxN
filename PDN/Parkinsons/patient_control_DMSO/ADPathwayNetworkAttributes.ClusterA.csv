@@ -1,0 +1,16 @@
+,NodeName,Score,SumPos,SumNeg,NodeType
+1,CMAP.up.167_amitriptyline_1.00e-06_MCF7_up,4,3,1,CMAP_UP
+2,CMAP.up.258_LY-294002_1.00e-05_MCF7_up,3,3,0,CMAP_UP
+3,CMAP.up.281_fludrocortisone_1.00e-06_MCF7_up,3,2,1,CMAP_UP
+4,CMAP.up.325_monorden_1.00e-07_MCF7_up,5,0,5,CMAP_UP
+5,CMAP.up.201_15-deltaprostaglandinJ2_1.00e-05_MCF7_up,4,0,4,CMAP_UP
+6,CMAP.up.202_raloxifene_1.00e-07_MCF7_up,3,2,1,CMAP_UP
+7,CMAP.up.261_ciclosporin_1.00e-06_MCF7_up,3,2,1,CMAP_UP
+8,CMAP.up.265_prednisolone_1.00e-06_MCF7_up,3,2,1,CMAP_UP
+9,CMAP.up.336_nitrendipine_1.00e-05_MCF7_up,3,1,2,CMAP_UP
+10,CMAP.up.23_valproicacid_1.00e-03_MCF7_up,3,2,1,CMAP_UP
+11,Pathway.{FCGR2B50} (Static Module),99,0,0,Pathway
+12,Pathway.Eicosanoid Synthesis (Wikipathways),99,0,0,Pathway
+13,Pathway.Staphylococcus aureus infection (KEGG),99,0,0,Pathway
+14,Pathway.Complement Activation Classical Pathway (Wikipathways),99,0,0,Pathway
+15,Pathway.Glucocorticoid &amp; Mineralcorticoid Metabolism (Wikipathways),99,0,0,Pathway

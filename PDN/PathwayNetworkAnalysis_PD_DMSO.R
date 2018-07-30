@@ -10,27 +10,28 @@ library(readxl)
 library(pathprint)
 
 #### Inputs ####
-# Project files (change those lines of you are starting a new project)
-project_dir <- "Parkinsons"
-project_folder <- "patient_control_DMSO" 
+# Project files (change those lines if you are starting a new project)
+project_outer_dir <- "Parkinsons"
+project_inner_folder <- "patient_control_DMSO" 
 pathwayDataFilename <- "pathway_Fibroblast_RNAseq_Patient_DMSO_vs_Control_DMSO_limma sigpathways 0.05p_1.2FC_modified.xls"
-humanFilename <-"square_improved_PCxN_DPD.Hs.gs.mini.PDN.CMAP.RDS"
+humanFilename <-"square_data_50000.RDS"
+
 #### Loading resources ####
 
 # Creating the project directory if needed(new project)
-if (!file.exists(project_dir)) {
-    dir.create(project_dir, showWarnings = FALSE)
-    dir.create(paste(project_dir, "/", project_folder, sep = ""), showWarnings = FALSE)
+if (!file.exists(project_outer_dir)) {
+    dir.create(project_outer_dir, showWarnings = FALSE)
+    dir.create(paste(project_outer_dir, "/", project_inner_folder, sep = ""), showWarnings = FALSE)
 }
 
 # load data from file
 # extract significant pathways based on cutoffs
 pathwayData <- read_excel(paste("data/", pathwayDataFilename, sep = ""))
 
-setwd(paste(project_dir, "/", project_folder, "/", sep = ""))
+setwd(paste(project_outer_dir, "/", project_inner_folder, "/", sep = ""))
 
 # Output dir setup
-OutputDataDir <- paste("/", project_dir, "/", project_folder, sep = "")
+OutputDataDir <- paste("/", project_outer_dir, "/", project_inner_folder, sep = "")
 
 #### NEEDS TO ADAPT TO INPUT. Already ordered but re-do just to check #### 
 pathwayData <- pathwayData[order(pathwayData$logFC, decreasing = T),]
@@ -96,23 +97,26 @@ for (i in unique(CMAPdirection)){
 
 #### NEEDS TO RELOCATE OR SPLIT. Create CMAP network with all Pathways ####
 library(GeneNet)
-DPD.pcor.est <- ggm.estimate.pcor(
-    cor.matrix[
-        (grepl("CTD.disease.", rownames(cor.matrix)) |
-             grepl("CTD.chem.", rownames(cor.matrix)) |
-             grepl("PharmGKB.", rownames(cor.matrix)) |
-             grepl("Pathway.", rownames(cor.matrix)) |
-             grepl("Hide.", rownames(cor.matrix)) |
-             rownames(cor.matrix) %in% CMAPnamesUse
-        ),
-        (grepl("CTD.disease.", rownames(cor.matrix)) |
-             grepl("CTD.chem.", rownames(cor.matrix)) |
-             grepl("PharmGKB.", rownames(cor.matrix)) |
-             grepl("Pathway.", rownames(cor.matrix)) |
-             grepl("Hide.", rownames(cor.matrix)) |
-             rownames(cor.matrix) %in% CMAPnamesUse
-        )
-])
+tempm <- cor.matrix[
+    (grepl("CTD.disease.", rownames(cor.matrix)) |
+         grepl("CTD.chem.", rownames(cor.matrix)) |
+         grepl("PharmGKB.", rownames(cor.matrix)) |
+         grepl("Pathway.", rownames(cor.matrix)) |
+         grepl("Hide.", rownames(cor.matrix)) |
+         rownames(cor.matrix) %in% CMAPnamesUse
+    ),
+    (grepl("CTD.disease.", rownames(cor.matrix)) |
+         grepl("CTD.chem.", rownames(cor.matrix)) |
+         grepl("PharmGKB.", rownames(cor.matrix)) |
+         grepl("Pathway.", rownames(cor.matrix)) |
+         grepl("Hide.", rownames(cor.matrix)) |
+         rownames(cor.matrix) %in% CMAPnamesUse
+    )
+]
+
+class(tempm) <- "numeric"
+
+DPD.pcor.est <- ggm.estimate.pcor(tempm)
 
 save(DPD.pcor.est, file = paste("DPD.pcor.est.RData", sep = "/"))
 
