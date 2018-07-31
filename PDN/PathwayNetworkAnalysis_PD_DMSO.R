@@ -73,19 +73,19 @@ pathwayData <- pathwayData[order(vname, decreasing = T),]
 
 # Cluster A) target top 5 pathways
 ClusterA <- head(pathwayData[(pathwayData[,foldChange_col]>0),],5)
-ClusterA <- ClusterA[,pathway_col]
+ClusterA <- unlist(unname(ClusterA[,pathway_col]))
 
 # Cluster B) target top 10 pathways
 ClusterB <- head(pathwayData[(pathwayData[,foldChange_col]>0),],10)
-ClusterB <- ClusterB[,pathway_col]
+ClusterB <- unlist(unname(ClusterB[,pathway_col]))
 
 # Cluster C) target bottom 5 pathways
 ClusterC <- tail(pathwayData[(pathwayData[,foldChange_col]<0),],5)
-ClusterC <- ClusterC[,pathway_col]
+ClusterC <- unlist(unname(ClusterC[,pathway_col]))
 
 # Cluster D) target bottom 10 pathways
 ClusterD <- tail(pathwayData[(pathwayData[,foldChange_col]<0),],10)
-ClusterD <- ClusterD[,pathway_col]
+ClusterD <- unlist(unname(ClusterD[,pathway_col]))
 
 print("ClusterA")
 ClusterA
