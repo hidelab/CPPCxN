@@ -1,11 +1,13 @@
 # Network based analysis of alzheimers pathways from mt.saina data from Sandeep
 # Version: Alzhemier's Disease
 # Init date: 20171220
+# Update date: 20180730
 
 # Guide
 # 1. Place the pathway data file in the same dir as this script
 # 2. Set inputs below
-# 3. Run forest
+# 3. Set working directory to CPPCxN/PDN/
+# 4. Run forest
 
 #### Set inputs #### 
 
@@ -67,15 +69,23 @@ lname <- pathwayData[,foldChange_col]
 vname <- unlist(lname, use.names=FALSE)
 pathwayData <- pathwayData[order(vname, decreasing = T),]
 
-#### NEEDS TO ADJUST FOR THE CASE THERE ARE LESS THAN 5 pathways #### 
+#### Creating clusters (checking sign) #### 
+
 # Cluster A) target top 5 pathways
-ClusterA <- head(pathwayData[,pathway_col],5)
+ClusterA <- head(pathwayData[(pathwayData[,foldChange_col]>0),],5)
+ClusterA <- ClusterA[,pathway_col]
+
 # Cluster B) target top 10 pathways
-ClusterB <- head(pathwayData[,pathway_col],10)
+ClusterB <- head(pathwayData[(pathwayData[,foldChange_col]>0),],10)
+ClusterB <- ClusterB[,pathway_col]
+
 # Cluster C) target bottom 5 pathways
-ClusterC <- tail(pathwayData[,pathway_col],5)
+ClusterC <- tail(pathwayData[(pathwayData[,foldChange_col]<0),],5)
+ClusterC <- ClusterC[,pathway_col]
+
 # Cluster D) target bottom 10 pathways
-ClusterD <- tail(pathwayData[,pathway_col],10)
+ClusterD <- tail(pathwayData[(pathwayData[,foldChange_col]<0),],10)
+ClusterD <- ClusterD[,pathway_col]
 
 print("ClusterA")
 ClusterA
