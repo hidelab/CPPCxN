@@ -12,7 +12,7 @@
 # Set project files
 project_outer_dir <- "Parkinsons"
 project_inner_folder <- "patient_control_DMSO" 
-pathwayDataFilename <- "Doo_6wk_AD_DMSO_diffPathways.txt"
+pathwayDataFilename <- "pathway_Fibroblast_RNAseq_Patient_DMSO_vs_Control_DMSO_limma sigpathways 0.05p_1.2FC_modified.xls"
 humanFilename <-"square_data_50000.RDS"
 
 # If pathwayDataFilename is txt, note the separator (as in sep argument) 
@@ -41,7 +41,7 @@ if (!file.exists(project_outer_dir)) {
 # 1.Identify some cases
 # 2.Make sure its a dataframe
 
-# extract significant pathways based on cutoffs
+# Extract significant pathways based on cutoffs
 fextension <- file_ext(pathwayDataFilename)
 if ((fextension == "xls") | (fextension == "xlsx")) {
     pathwayData <- read_excel(paste("data/", pathwayDataFilename, sep = ""))
