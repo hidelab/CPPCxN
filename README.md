@@ -88,14 +88,16 @@ Run batch script `improved_PCxN_sharc` by first adjusting:
 3. Batch max time to let running (suggested ?)
 4. rels (gene sets relationships desired). Use: 1,2,3,4,5,6 to request all relationships. If you need only some of the relationships use any subset of the following numbers:
 
-|   Desired Pairs   | No |
-| ------------------|:--:|
-|    pathway-CMAP   |  1 |
-|     pathway-CTD   |  2 |
-|  pathway-PharmGKB |  3 |
-|      CMAP-CTD     |  4 |
-|   CMAP-PharmGKB   |  5 |
-| CMAP.up-CMAP.down |  6 |
+|        Desired Pairs        | No |
+| --------------------------- |:--:|
+|        pathway-CMAP         |  1 |
+|        pathway-CTD          |  2 |
+|      pathway-PharmGKB       |  3 |
+|         CMAP-CTD            |  4 |
+|       CMAP-PharmGKB         |  5 |
+|     CMAP.up-CMAP.down       |  6 |
+|   pathway-L1000CDS2.down    |  7 |
+| L1000CDS2.up-L1000CDS2.down |  8 |
 
 ## Additional tools
 Additional tools that provide flexibility to PCxN.
