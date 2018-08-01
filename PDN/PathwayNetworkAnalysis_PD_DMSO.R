@@ -3,7 +3,7 @@
 # Init date: 20171220
 # Update date: 20180730
 
-# Guide
+#### Guide ####
 # 1. Place the pathway data file in the same dir as this script
 # 2. Set inputs below
 # 3. Set working directory to CPPCxN/PDN/
@@ -13,8 +13,10 @@
 
 # Set project files
 project_outer_dir <- "Parkinsons"
-project_inner_folder <- "patient_control_DMSO" 
+project_inner_folder <- "patient_control_DMSO"
+# inner data
 pathwayDataFilename <- "pathway_Fibroblast_RNAseq_Patient_DMSO_vs_Control_DMSO_limma sigpathways 0.05p_1.2FC_modified.xls"
+# absolute path
 humanFilename <-"square_data_50000.RDS"
 
 # If pathwayDataFilename is txt, note the separator (as in sep argument) 
@@ -131,7 +133,8 @@ for (i in unique(CMAPdirection)){
     for (j in unique(CMAPcell[CMAPdirection == i])){
         for (k in unique(CMAPdrug[CMAPdirection == i & CMAPcell == j])){
             CMAPnamesSub <- CMAPnames[CMAPdirection == i & CMAPcell == j & CMAPdrug == k]
-            CMAPnamesUse <- c(CMAPnamesUse, CMAPnamesSub[which.max(CMAPconcentration[CMAPdirection == i & CMAPcell == j & CMAPdrug == k])])
+            CMAPnamesUse <- c(CMAPnamesUse, CMAPnamesSub[
+                which.max(CMAPconcentration[CMAPdirection == i & CMAPcell == j & CMAPdrug == k])])
         }
     }
 }
