@@ -26,10 +26,10 @@ A more detailed report of the runtime comparisons can be found [here](https://do
 |                              R code                                   |    Status     |      Note      |
 | ----------------------------------------------------------------------|:-------------:|:--------------:|
 | Pre-calculate the matrix that holds the disjoint summaries            | Done          |                |
-| Pre-calculate the matrix that holds the joint summaries (multi-core)  | Undergoing    | Need multicore |
+| Pre-calculate the matrix that holds the joint summaries (multi-core)  |    On hold    | Need multicore |
 | Desired relationships feature                                         | Done          | disjoint + sub | 
 | Replace/remove Shrinkage                                              |  Not decided  |                |
-| Concatenate matrices                                                  |  Undergoing   |                |
+| Concatenate matrices                                                  |      Done     |                |
 
 #### Concatenate matrices
 We have to test whether we can add up matrices which are results of different PCxN runs. Towards that direction we will run a mini experiment of concatenating different sized matrices with different argumetns and see how the actual numbers in the concatenated matrix are affected.
@@ -54,7 +54,7 @@ Implementing current PCxN functions in Rcpp. Four functions have been translated
 |    OverlapCoefficient.cpp |     Done      |                |
 |        ShrinkCor.cpp      |     Done      |  On dis + sub  | 
 |       ShrinkPCor.cpp      |     Done      |                |
-| precalculate_matrices.cpp |    Ongoing    |                |
+| precalculate_matrices.cpp |    On hold    |                |
 
 ## Memory Issues
 The original PCxN code was built and run for 1,330 gene sets/pathways. When we increased the pathways to 5000, memory issues occcured during execution on sharc. Using rmem=48G, mem=48G and 14 cores scripts that handled tissues with more than one GSEs got stopped shortly after the first completed GSE. One thing we can do is adjust the scripts to clean-up after each loop but still the memory needed at any time will definitely be considerably more than before. Only considering a subset of pairs would do wonders for that problem. 
