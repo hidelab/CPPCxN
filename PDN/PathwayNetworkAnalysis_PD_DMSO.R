@@ -17,7 +17,7 @@ project_inner_folder <- "patient_control_DMSO"
 # inner data
 pathwayDataFilename <- "pathway_Fibroblast_RNAseq_Patient_DMSO_vs_Control_DMSO_limma sigpathways 0.05p_1.2FC_modified.xls"
 # absolute path
-humanFilename <-"square_data_50000.RDS"
+humanFilename <-"square_data_50000"
 
 # If pathwayDataFilename is txt, note the separator (as in sep argument) 
 # and how the txt denotes decimals ("," or ".")
@@ -34,6 +34,8 @@ library(pathprint)
 library("tools")
 
 #### Loading resources ####
+
+prefix <- paste(project_outer_dir, "_", project_inner_folder, sep = "")
 
 # Creating the project directory if needed(new project)
 if (!file.exists(project_outer_dir)) {
@@ -117,7 +119,8 @@ length(ClusterD) == sum(names(pathprint.Hs.gs) %in% ClusterD)
 # 2) Find subnetworks within these connected clusters
 
 #### Load human data and replacing NAs with zeros ####
-cor.matrix = readRDS(paste("../../data/", humanFilename, sep = ""))
+humanFilenameFull <- paste(humanFilename, ".RDS", sep = "")
+cor.matrix = readRDS(paste("../../data/", humanFilenameFull, sep = ""))
 cor.matrix[is.na(cor.matrix)] <- 0
 
 #### Just use highest concentration of CMPA drug ####	 
@@ -162,10 +165,10 @@ class(tempm) <- "numeric"
 
 DPD.pcor.est <- ggm.estimate.pcor(tempm)
 
-save(DPD.pcor.est, file = paste("DPD.pcor.est.RData", sep = "/"))
+save(DPD.pcor.est, file = paste(humanFilename,".pcor.est.", Sys.Date(),".RData", sep = ""))
 
 #### Loading GeneNet object and create network ####
-load("DPD.pcor.est.RData")
+load(paste(humanFilename,".pcor.est.", Sys.Date(),".RData", sep = ""))
 DPD.pcor.est.results <- network.test.edges(DPD.pcor.est, direct = F, plot=F)
 
 nodeNames <- rownames(DPD.pcor.est)
@@ -205,7 +208,7 @@ DPD.pcor.est.results$testNode[indx2a] <- DPD.pcor.est.results$node1[indx2a]
 #DPD.pcor.est.results$testNode[indx3a] <- DPD.pcor.est.results$node1[indx3a]
 #DPD.pcor.est.results$CMAPnode[indx3a] <- DPD.pcor.est.results$node2[indx3a]
 
-save(DPD.pcor.est.results, file = "DPD.pcor.est.results.RData")
+save(DPD.pcor.est.results, file = paste(humanFilename,".pcor.est.results.", Sys.Date(),".RData", sep = ""))
 # load("DPD.pcor.est.results.RData)
 
 #### Want to know ####
@@ -282,7 +285,7 @@ if (2 == 2){
     }
     
     # Save testNetwork list
-    testNetworkListFile <- "PD.DMSO.Pathway.human.network.RData"
+    testNetworkListFile <- paste(prefix,".human.network.", Sys.Date(),".RData", sep = "")
     save(testNetworkList, file = testNetworkListFile)
     
     for (i in 1:length(testClusters))
@@ -317,7 +320,7 @@ if (2 == 2){
         rownames(scoreData) <- gsub(",", "", rownames(scoreData))
         
         # Save network
-        networkOutputFile <- paste("PDDMSOPathwayNetwork", names(testClusters)[i], "csv", sep = ".")
+        networkOutputFile <- paste(prefix,".PathwayNetwork", names(testClusters)[i], Sys.Date(), "csv", sep = ".")
         write.csv(testNetwork.0.9.Output[,c(12,13,14,15,1,4,5,6)],
                   file = networkOutputFile, quote = F)
         
@@ -339,7 +342,7 @@ if (2 == 2){
         attribute.table$NodeType[grep("CTD.disease", attribute.table$NodeName)] <- "CTD_Disease"
         attribute.table$NodeType[grep("CTD.chem", attribute.table$NodeName)] <- "CTD_Chem"
         
-        networkAttributesOutputFile <- paste("ADPathwayNetworkAttributes", names(testClusters)[i], "csv", sep = ".")
+        networkAttributesOutputFile <- paste(prefix,".PathwayNetworkAttributes", names(testClusters)[i], Sys.Date(), "csv", sep = ".")
         write.csv(attribute.table, file = networkAttributesOutputFile, quote = F)
     }
 }
@@ -464,4 +467,4 @@ for (i in 1:length(testClusters))
 
 ClusterCMAPpvals <- cbind(ClusterCMAPScores, ClusterCMAPpvals)
 write.csv(ClusterCMAPpvals[order(ClusterCMAPpvals[,paste(names(testClusters)[1], ".CombinedScore", sep = "")], decreasing = F),],
-          file = "ClusterCMAPpvals.csv")
+          file = paste( prefix,".ClusterCMAPpvals", Sys.Date(),".csv"))
