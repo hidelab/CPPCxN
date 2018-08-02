@@ -234,7 +234,6 @@ gs_lst = gs_lst[ sapply(gs_lst,length) > 0 ]
 
 # Checks if we have a specific interaction: TRUE if relationships is allowed, otherwise FALSE
 check_rel <- function(n1,n2,rel){
-    
     switch(rel,
            "1" = if((startsWith(n1, "Pathway.") & startsWith(n2, "CMAP.")) | (startsWith(n2, "Pathway.") & startsWith(n1, "CMAP."))){return(TRUE)}else {return(FALSE)},
            "2" = if((startsWith(n1, "Pathway.") & startsWith(n2, "CTD.")) | (startsWith(n2, "Pathway.") & startsWith(n1, "CTD."))){return(TRUE)}else {return(FALSE)},
@@ -259,15 +258,17 @@ ProcessElement = function(ic){
     n1 <- names(gs_lst[i])
     n2 <- names(gs_lst[j])
     
-    pass <- TRUE
+    pass <- FALSE
     
     for (r in 1:length(rels)) {
-        if(!check_rel(n1,n2,rels[r])) pass <- FALSE
+        if(check_rel(n1,n2,rels[r])) {
+            pass <- TRUE
+        }
     }
     
     # Check if this pairs passes all relationship checks
     if(!pass) return(NULL)
-    
+
     # shared genes
     gsAB <- intersect(gsA,gsB)
     
