@@ -20,6 +20,8 @@
 # 6. CMAP.up-CMAP.down
 # 7. pathway-L1000CDS2
 # 8. L1000CDS2.up-L1000CDS2.down
+# 9. L1000CDS2.up-L1000CDS2.up
+# 10. L1000CDS2.down-L1000CDS2.down
 
 # Example run using the command line: Rscript improved_PCxN_estimates01.R 1 14 1,2,4, DPD.Hs.gs.mini.PDN.RDS
 
@@ -242,7 +244,9 @@ check_rel <- function(n1,n2,rel){
            "5" = if((startsWith(n1, "CMAP.") & startsWith(n2, "PharmGKB.")) | (startsWith(n2, "CMAP.") & startsWith(n1, "PharmGKB."))){return(TRUE)}else {return(FALSE)},
            "6" = if((startsWith(n1, "CMAP.up.") & startsWith(n2, "CMAP.down")) | (startsWith(n2, "CMAP.up") & startsWith(n1, "CMAP.down"))){return(TRUE)}else {return(FALSE)},
            "7" = if((startsWith(n1, "Pathway.") & startsWith(n2, "L1000CDS2.")) | (startsWith(n2, "Pathway.") & startsWith(n1, "L1000CDS2."))){return(TRUE)}else {return(FALSE)},
-           "8" = if((startsWith(n1, "L1000CDS2.up.") & startsWith(n2, "L1000CDS2.down")) | (startsWith(n2, "L1000CDS2.up") & startsWith(n1, "L1000CDS2.down"))){return(TRUE)}else {return(FALSE)}
+           "8" = if((startsWith(n1, "L1000CDS2.up") & startsWith(n2, "L1000CDS2.down")) | (startsWith(n2, "L1000CDS2.up") & startsWith(n1, "L1000CDS2.down"))){return(TRUE)}else {return(FALSE)},
+           "9" = if((startsWith(n1, "L1000CDS2.up") & startsWith(n2, "L1000CDS2.up"))){return(TRUE)}else {return(FALSE)},
+           "10" = if((startsWith(n1, "L1000CDS2.down") & startsWith(n2, "L1000CDS2.down"))){return(TRUE)}else {return(FALSE)}
     )
 }
 
