@@ -142,5 +142,10 @@ Example
 1. Local(load the function first): `convert_pcxn_result("original_PCxN_result.RDS")`
 2. Sharc: 
 
+## Improved PCxN additional packages needed
+1. svd (cran)
+2. corpcor (cran)
+3. parallel (in R core packages)
+
 ## Improved PCxN diagram
 ![Improved PCxN diagram](https://github.com/hidelab/CPPCxN/blob/master/improved_PCxN.png "PCxN diagram")
