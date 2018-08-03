@@ -146,6 +146,7 @@ Example
 1. svd (cran)
 2. corpcor (cran)
 3. parallel (in R core packages)
+4. metap (cran)
 
 ## Improved PCxN diagram
 ![Improved PCxN diagram](https://github.com/hidelab/CPPCxN/blob/master/improved_PCxN.png "PCxN diagram")
