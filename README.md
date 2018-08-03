@@ -98,6 +98,8 @@ Run batch script `improved_PCxN_sharc` by first adjusting:
 |     CMAP.up-CMAP.down       |  6 |
 |   pathway-L1000CDS2.down    |  7 |
 | L1000CDS2.up-L1000CDS2.down |  8 |
+|  L1000CDS2.up-L1000CDS2.up  |  9 |
+|L1000CDS2.down-L1000CDS2.down| 10 |
 
 ## Additional tools
 Additional tools that provide flexibility to PCxN.
