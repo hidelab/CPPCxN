@@ -30,12 +30,12 @@ barcode_dir = "../data/HGU133plus2/"
 # otherwise the functions to combine the p-values
 # cannot handle values near 0 and values near 1
 AdjustPmat = function(p_mat,eps=1E-16){
-  res = t(apply(p_mat,1,function(pval){
-    pval[pval <= eps] = eps
-    pval[pval >= 1-eps] = 1 - eps
-    return(pval)
-  }))
-  return(res)
+    res = t(apply(p_mat,1,function(pval){
+        pval[pval <= eps] = eps
+        pval[pval >= 1-eps] = 1 - eps
+        return(pval)
+    }))
+    return(res)
 }
 
 # ==== Barcode Annotation ====
@@ -75,93 +75,98 @@ gs_lst = readRDS(paste("../data/",geneset_file, sep=""))
 # indices for pathway pairs 
 number_of_pathways = choose(length(gs_lst),2)
 # split pathway pairs in chunks
-pairs_chunks <- split(1:number_of_pathways, ceiling(1:number_of_pathways/200000))
+pairs_chunks <- split(1:number_of_pathways, ceiling(1:number_of_pathways/2000000))
 
 # ==== Pathway Names =====
 # load a set of experiment-level estimates
 my_rds = paste0("../",output_folder,"/mean_pcor2_barcode/",fname[13],"_cpad_pathcor.RDS")
 
-myLst = readRDS(my_rds)[ pairs_chunks[[ as.numeric(cmd_args[1]) ]] ]
-# get names for pathway pairs
-res = as.data.frame( t(sapply(myLst,function(x){ c(x[["Pathway.A"]],x[["Pathway.B"]]) })) )
-colnames(res) = c("Pathway.A","Pathway.B")
-
-# ==== Overlap Coefficient =====
-# get overlap coefficients for pathway pairs
-res$Overlap.Coefficient = unlist( sapply(myLst,function(x){x[[ "Overlap.Coeff" ]]}), use.names = F )
-
-# ===== Correlation Estimates ====
-GetCorEstimate = function(ic){
-    # load experiment-level estimates
-    my_rds = paste0("../",output_folder,"/mean_pcor2_barcode/",fname[ic],"_cpad_pathcor.RDS")
-    myLst = readRDS(my_rds)[ pairs_chunks[[ as.numeric(cmd_args[1]) ]] ]
-    # extract correlation estimates
-    tmp = unlist( sapply(myLst, function(x){x[[ "estimate" ]]}), use.names = F )
-    setTxtProgressBar(pb,ic)
-    return( tmp )
-}
-
-pb = txtProgressBar(min=0,max=length(fname),style=3,initial=0,char="-")
-cat("\n")
-cor_estimates = mclapply( seq_along(fname), GetCorEstimate, mc.cores = as.numeric(cmd_args[3]) ) 
-close(pb)
-
-
-cor_estimates = Reduce(f = cbind, x = cor_estimates)
-colnames(cor_estimates) = fname
-
-# number of samples per experiment
-n_vec = readRDS( paste0( "../",output_folder,"/mean_pcor2_barcode/res/n_vec.RDS" ) )
-
-# weighted average for the correlation estimates
-n_mult = n_vec/sum(n_vec)
-res$PathCor = c( cor_estimates%*%n_mult )
-
-# ==== P-Values ====
-GetPvals = function(ic){
-    # load experiment-level estimates
-    my_rds = paste0("../",output_folder,"/mean_pcor2_barcode/",fname[ic],"_cpad_pathcor.RDS")
-    myLst = readRDS(my_rds)[ pairs_chunks[[ as.numeric(cmd_args[1]) ]] ]
-    # extract p-value
-    tmp = unlist( sapply(myLst, function(x){x[[ "p.value" ]]}), use.names = F )
-    setTxtProgressBar(pb,ic)
-    return( tmp )
-}
-
-
-pb = txtProgressBar(min=0,max=length(fname),style=3,initial=0,char="-")
-cat("\n")
-pvals = mclapply( seq_along(fname), GetPvals, mc.cores = as.numeric(cmd_args[3]) ) 
-close(pb)
-
-pvals = Reduce(f = cbind, x = pvals)
-colnames(pvals) = fname
-
-
-# adjust p-values, otherwise the functions to combine the p-values
-# cannot handle values near 0 and values near 1
-pvals = AdjustPmat(pvals)
-
-# Liptak's Method to combine p-values
-CombinePval = function(ic){
-    if( any( is.na( pvals[ic,] ) ) ){
-        tmp = NA
-    }else{
-        tmp = c(sumz(p=pvals[ic,], weights=n_vec)$p)
+# Start looping through parts here
+for (cp in 1:length(pairs_chunks)) {
+    
+    myLst = readRDS(my_rds)[ pairs_chunks[[ cp ]] ]
+    # get names for pathway pairs
+    res = as.data.frame( t(sapply(myLst,function(x){ c(x[["Pathway.A"]],x[["Pathway.B"]]) })) )
+    colnames(res) = c("Pathway.A","Pathway.B")
+    
+    # ==== Overlap Coefficient =====
+    # get overlap coefficients for pathway pairs
+    res$Overlap.Coefficient = unlist( sapply(myLst,function(x){x[[ "Overlap.Coeff" ]]}), use.names = F )
+    
+    # ===== Correlation Estimates ====
+    GetCorEstimate = function(ic){
+        # load experiment-level estimates
+        my_rds = paste0("../",output_folder,"/mean_pcor2_barcode/",fname[ic],"_cpad_pathcor.RDS")
+        myLst = readRDS(my_rds)[ pairs_chunks[[ cp ]] ]
+        # extract correlation estimates
+        tmp = unlist( sapply(myLst, function(x){x[[ "estimate" ]]}), use.names = F )
+        setTxtProgressBar(pb,ic)
+        return( tmp )
     }
-    setTxtProgressBar(pb,ic)
-    return(tmp)
-}
-
-pb = txtProgressBar(min=0,max=length(fname),style=3,initial=0,char="-")
-cat("\n")
-combined_pvals = mclapply( 1:nrow(pvals), CombinePval, mc.cores = as.numeric(cmd_args[3]) ) 
-close(pb)
-
-res$p.value = unlist( combined_pvals )
-
-# save results in data frame
-saveRDS(res, paste0("../",output_folder,"/mean_pcor2_barcode/res/pcxn_mean_pcor2_barcode_part",as.numeric(cmd_args[1]),".RDS"))
+    
+    pb = txtProgressBar(min=0,max=length(fname),style=3,initial=0,char="-")
+    cat("\n")
+    cor_estimates = mclapply( seq_along(fname), GetCorEstimate, mc.cores = as.numeric(cmd_args[3]) ) 
+    close(pb)
+    
+    
+    cor_estimates = Reduce(f = cbind, x = cor_estimates)
+    colnames(cor_estimates) = fname
+    
+    # number of samples per experiment
+    n_vec = readRDS( paste0( "../",output_folder,"/mean_pcor2_barcode/res/n_vec.RDS" ) )
+    
+    # weighted average for the correlation estimates
+    n_mult = n_vec/sum(n_vec)
+    res$PathCor = c( cor_estimates%*%n_mult )
+    
+    # ==== P-Values ====
+    GetPvals = function(ic){
+        # load experiment-level estimates
+        my_rds = paste0("../",output_folder,"/mean_pcor2_barcode/",fname[ic],"_cpad_pathcor.RDS")
+        myLst = readRDS(my_rds)[ pairs_chunks[[ cp ]] ]
+        # extract p-value
+        tmp = unlist( sapply(myLst, function(x){x[[ "p.value" ]]}), use.names = F )
+        setTxtProgressBar(pb,ic)
+        return( tmp )
+    }
+    
+    
+    pb = txtProgressBar(min=0,max=length(fname),style=3,initial=0,char="-")
+    cat("\n")
+    pvals = mclapply( seq_along(fname), GetPvals, mc.cores = as.numeric(cmd_args[3]) ) 
+    close(pb)
+    
+    pvals = Reduce(f = cbind, x = pvals)
+    colnames(pvals) = fname
+    
+    
+    # adjust p-values, otherwise the functions to combine the p-values
+    # cannot handle values near 0 and values near 1
+    pvals = AdjustPmat(pvals)
+    
+    # Liptak's Method to combine p-values
+    CombinePval = function(ic){
+        if( any( is.na( pvals[ic,] ) ) ){
+            tmp = NA
+        }else{
+            tmp = c(sumz(p=pvals[ic,], weights=n_vec)$p)
+        }
+        setTxtProgressBar(pb,ic)
+        return(tmp)
+    }
+    
+    pb = txtProgressBar(min=0,max=length(fname),style=3,initial=0,char="-")
+    cat("\n")
+    combined_pvals = mclapply( 1:nrow(pvals), CombinePval, mc.cores = as.numeric(cmd_args[3]) ) 
+    close(pb)
+    
+    res$p.value = unlist( combined_pvals )
+    
+    # save results in data frame
+    saveRDS(res, paste0("../",output_folder,"/mean_pcor2_barcode/res/pcxn_mean_pcor2_barcode_part",cp,".RDS"))
+    
+}# Finish looping through parts here
 
 info <- data.frame("parts" = pairs_chunks)
 saveRDS(info, paste0("../",output_folder,"/mean_pcor2_barcode/res/parts.RDS"))
