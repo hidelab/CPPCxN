@@ -10,6 +10,7 @@
 # 3 - desired relationships/pairs according to following list
 # 4 - genesets file
 # 5 - partial correlation (0 = yes, 1 = no)
+# 6 - Output folder
 
 # Available relationships to pick as a third argument(e.g. c(1,3,5,6))
 # 1. pathway-CMAP
@@ -22,6 +23,8 @@
 # 8. L1000CDS2.up-L1000CDS2.down
 # 9. L1000CDS2.up-L1000CDS2.up
 # 10. L1000CDS2.down-L1000CDS2.down
+# 666. All possible relationships
+
 
 # Example run using the command line: Rscript improved_PCxN_estimates01.R 1 14 1,2,4, DPD.Hs.gs.mini.PDN.RDS
 
@@ -37,6 +40,7 @@ options(stringsAsFactors = F)
 # 3 - desired relationships/pairs
 # 4 - genesets file
 # 5 - partial correlation (0 = yes, 1 = no)
+# 6 - output folder
 
 cmd_args <- commandArgs(trailingOnly = T)
 
@@ -49,7 +53,7 @@ library(parallel)
 rels_char <- cmd_args[3]
 geneset_file <- cmd_args[4]
 pcor_choice <- cmd_args[5]
-output_folder <- "output_improved_PCxN"
+output_folder <- cmd_args[6]
 
 # directory with gene expression background
 barcode_dir <- "../data/HGU133plus2/"
@@ -244,7 +248,7 @@ check_rel <- function(n1,n2,rel){
            "5" = if((startsWith(n1, "CMAP.") & startsWith(n2, "PharmGKB.")) | (startsWith(n2, "CMAP.") & startsWith(n1, "PharmGKB."))){return(TRUE)}else {return(FALSE)},
            "6" = if((startsWith(n1, "CMAP.up.") & startsWith(n2, "CMAP.down")) | (startsWith(n2, "CMAP.up") & startsWith(n1, "CMAP.down"))){return(TRUE)}else {return(FALSE)},
            "7" = if((startsWith(n1, "Pathway.") & startsWith(n2, "L1000CDS2.")) | (startsWith(n2, "Pathway.") & startsWith(n1, "L1000CDS2."))){return(TRUE)}else {return(FALSE)},
-           "8" = if((startsWith(n1, "L1000CDS2.up") & startsWith(n2, "L1000CDS2.down")) | (startsWith(n2, "L1000CDS2.up") & startsWith(n1, "L1000CDS2.down"))){return(TRUE)}else {return(FALSE)},
+           "8" = if((startsWith(n1, "L1000CDS2.up.") & startsWith(n2, "L1000CDS2.down")) | (startsWith(n2, "L1000CDS2.up") & startsWith(n1, "L1000CDS2.down"))){return(TRUE)}else {return(FALSE)},
            "9" = if((startsWith(n1, "L1000CDS2.up") & startsWith(n2, "L1000CDS2.up"))){return(TRUE)}else {return(FALSE)},
            "10" = if((startsWith(n1, "L1000CDS2.down") & startsWith(n2, "L1000CDS2.down"))){return(TRUE)}else {return(FALSE)}
     )
@@ -271,6 +275,7 @@ ProcessElement = function(ic){
     }
     
     # Check if this pairs passes all relationship checks
+    if(rels[1] == 666) pass <- TRUE
     if(!pass) return(NULL)
 
     # shared genes

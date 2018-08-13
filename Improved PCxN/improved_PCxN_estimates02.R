@@ -14,11 +14,13 @@ library(metap)
 # is the number of cores
 # 2 - genesets file
 # 3 - number of cores
+# 4 - output folder
+
 cmd_args <- commandArgs(trailingOnly = T)
 
 # ==== INPUTS ====
 geneset_file <- cmd_args[2]
-output_folder <- "output_improved_PCxN"
+output_folder <- cmd_args[4]
 
 # directory with gene expression background
 barcode_dir = "../data/HGU133plus2/"
@@ -160,6 +162,9 @@ res$p.value = unlist( combined_pvals )
 
 # save results in data frame
 saveRDS(res, paste0("../",output_folder,"/mean_pcor2_barcode/res/pcxn_mean_pcor2_barcode_part",as.numeric(cmd_args[1]),".RDS"))
+
+info <- data.frame("parts" = pairs_chunks)
+saveRDS(info, paste0("../",output_folder,"/mean_pcor2_barcode/res/parts.RDS"))
 
 rm(list = ls())
 gc()
