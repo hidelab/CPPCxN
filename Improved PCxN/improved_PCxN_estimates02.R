@@ -2,7 +2,7 @@ rm(list = ls(all=TRUE))
 gc()
 options(stringsAsFactors = F)
 
-install.packages('metap', repos='http://cran.us.r-project.org')
+#install.packages('metap', repos='http://cran.us.r-project.org')
 
 library(parallel)
 library(metap)
@@ -30,12 +30,12 @@ barcode_dir = "../data/HGU133plus2/"
 # otherwise the functions to combine the p-values
 # cannot handle values near 0 and values near 1
 AdjustPmat = function(p_mat,eps=1E-16){
-    res = t(apply(p_mat,1,function(pval){
-        pval[pval <= eps] = eps
-        pval[pval >= 1-eps] = 1 - eps
-        return(pval)
-    }))
-    return(res)
+  res = t(apply(p_mat,1,function(pval){
+    pval[pval <= eps] = eps
+    pval[pval >= 1-eps] = 1 - eps
+    return(pval)
+  }))
+  return(res)
 }
 
 # ==== Barcode Annotation ====

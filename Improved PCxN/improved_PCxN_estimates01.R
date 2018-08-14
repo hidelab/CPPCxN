@@ -23,6 +23,7 @@
 # 8. L1000CDS2.up-L1000CDS2.down
 # 9. L1000CDS2.up-L1000CDS2.up
 # 10. L1000CDS2.down-L1000CDS2.down
+# 11. pathway-pathway
 # 666. All possible relationships
 
 
@@ -250,7 +251,8 @@ check_rel <- function(n1,n2,rel){
            "7" = if((startsWith(n1, "Pathway.") & startsWith(n2, "L1000CDS2.")) | (startsWith(n2, "Pathway.") & startsWith(n1, "L1000CDS2."))){return(TRUE)}else {return(FALSE)},
            "8" = if((startsWith(n1, "L1000CDS2.up.") & startsWith(n2, "L1000CDS2.down")) | (startsWith(n2, "L1000CDS2.up") & startsWith(n1, "L1000CDS2.down"))){return(TRUE)}else {return(FALSE)},
            "9" = if((startsWith(n1, "L1000CDS2.up") & startsWith(n2, "L1000CDS2.up"))){return(TRUE)}else {return(FALSE)},
-           "10" = if((startsWith(n1, "L1000CDS2.down") & startsWith(n2, "L1000CDS2.down"))){return(TRUE)}else {return(FALSE)}
+           "10" = if((startsWith(n1, "L1000CDS2.down") & startsWith(n2, "L1000CDS2.down"))){return(TRUE)}else {return(FALSE)},
+	   "11" = if((startsWith(n1, "Pathway.") & startsWith(n2, "Pathway."))){return(TRUE)}else {return(FALSE)}
     )
 }
 

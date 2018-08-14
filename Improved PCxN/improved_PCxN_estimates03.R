@@ -21,11 +21,10 @@ pb = txtProgressBar(min=0,max=2,initial=0,style=3)
 parts <- readRDS(paste0("../",output_folder,"/mean_pcor2_barcode/res/parts.RDS"))
 
 for(k in 1:parts[[1]]){
-  pcxn = rbind(pcxn, readRDS(paste0("../",output_folder,"/mean_pcor2_barcode/res/pcxn_mean_pcor2_barcode_part",k,".RDS")))
-  setTxtProgressBar(pb,k)
+    pcxn = rbind(pcxn, readRDS(paste0("../",output_folder,"/mean_pcor2_barcode/res/pcxn_mean_pcor2_barcode_part",k,".RDS")))
+    setTxtProgressBar(pb,k)
 }
 close(pb)
-
 # adjust p-values for multiple comparison
 pcxn$p.Adjust = p.adjust(p = pcxn$p.value, method = "fdr")
 
