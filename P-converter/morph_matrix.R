@@ -17,6 +17,7 @@ convert_pcxn_result <- function(pcxn_res) {
     }
     
     diag(square_matrix) <- "1"
+    square_matrix <- `class<-`(square_matrix, 'numeric')
     
     saveRDS(square_matrix, paste("square_", pcxn_res, sep = "") )
 }
