@@ -375,4 +375,8 @@ for(j in seq_along(tissue_series)){
     # save experiment-level estimates
     fname = paste0(make.names(tissue_select),"_",series)
     saveRDS(res, paste0("../",output_folder,"/mean_pcor2_barcode/",fname,"_cpad_pathcor.RDS"))
+    
+    accepted_pairs <- length(res)
+    actual_pairs <- data.frame("actual_number_of_pairs" = accepted_pairs)
+    saveRDS(actual_pairs, paste0("../",output_folder,"/mean_pcor2_barcode/res/pairs.RDS"))
 }

@@ -2,7 +2,7 @@ rm(list = ls(all=TRUE))
 gc()
 options(stringsAsFactors = F)
 
-#install.packages('metap', repos='http://cran.us.r-project.org')
+install.packages('metap', repos='http://cran.us.r-project.org')
 
 library(parallel)
 library(metap)
@@ -30,12 +30,12 @@ barcode_dir = "../data/HGU133plus2/"
 # otherwise the functions to combine the p-values
 # cannot handle values near 0 and values near 1
 AdjustPmat = function(p_mat,eps=1E-16){
-  res = t(apply(p_mat,1,function(pval){
-    pval[pval <= eps] = eps
-    pval[pval >= 1-eps] = 1 - eps
-    return(pval)
-  }))
-  return(res)
+    res = t(apply(p_mat,1,function(pval){
+        pval[pval <= eps] = eps
+        pval[pval >= 1-eps] = 1 - eps
+        return(pval)
+    }))
+    return(res)
 }
 
 # ==== Barcode Annotation ====
@@ -73,9 +73,10 @@ gs_lst = readRDS(paste("../data/",geneset_file, sep=""))
 
 
 # indices for pathway pairs 
-number_of_pathways = choose(length(gs_lst),2)
+npairs <- readRDS(paste0("../",output_folder,"/mean_pcor2_barcode/res/pairs.RDS"))
+number_of_pathways = npairs[[1]]
 # split pathway pairs in chunks
-pairs_chunks <- split(1:number_of_pathways, ceiling(1:number_of_pathways/2000000))
+pairs_chunks <- split(1:number_of_pathways, ceiling(1:number_of_pathways/200000))
 
 # ==== Pathway Names =====
 # load a set of experiment-level estimates
