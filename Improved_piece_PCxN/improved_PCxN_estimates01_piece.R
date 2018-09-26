@@ -5,7 +5,7 @@
 # pairwise pathway correlation coefficients along with the corresponding p-values.
 
 # Command line arguments from submission (sharc) script
-# 1 - job index: pick tissue type
+# 1 - job id: the id we received from the job array
 # 2 - number of cores
 # 3 - desired relationships/pairs according to following list
 # 4 - genesets file
@@ -25,10 +25,6 @@
 # 10. L1000CDS2.down-L1000CDS2.down
 # 11. pathway-pathway
 # 666. All possible relationships
-
-
-# Example run using the command line: Rscript improved_PCxN_estimates01.R 1 14 1,2,4, DPD.Hs.gs.mini.PDN.RDS
-
 
 rm(list = ls(all=TRUE)) 
 gc()
@@ -55,6 +51,16 @@ rels_char <- cmd_args[3]
 geneset_file <- cmd_args[4]
 pcor_choice <- cmd_args[5]
 output_folder <- cmd_args[6]
+id <- cmd_args[1]
+
+# Loading ID_map
+ID_map <- readRDS("ID_map.RDS")
+
+# Find which tissue corresponds to the id we received from the job array
+t <- ID_map[which(ID_map[,3] == id),1]
+
+# Find which Series corresponds to the id we received from the job array
+gse <- ID_map[which(ID_map[,3] == id),2]
 
 # directory with gene expression background
 barcode_dir <- "../data/HGU133plus2/"
@@ -221,7 +227,7 @@ getExprs <- function(x){
 }
 
 # select tissue type
-tissue_select <- names(res)[ as.numeric(cmd_args[1]) ]
+tissue_select <- names(res)[ as.numeric(t) ]
 # load normalized expression values
 tissue_exprs <- getExprs( tissue_select )
 # tissue rank expression values
@@ -286,7 +292,6 @@ ProcessElement = function(ic){
     # get correlation between the summaries for the unique genes
     tmp = data.frame(Pathway.A=names(gs_lst)[i],Pathway.B=names(gs_lst)[j])
     
-    
     if(pcor_choice == "0") {
         if(length(gsAB) > 0){
             # if pathways share genes, estimate conditional correlation (on shared genes)
@@ -341,7 +346,7 @@ check_path_path <- function(x){
 }
 
 # loop thru each experiment (GSE series) for a given tissue type
-for(j in seq_along(tissue_series)){
+for(j in gse){
     # subset expression ranks
     seriesn <- tissue_seriesn[j]
     series <- tissue_series[j]
@@ -375,8 +380,9 @@ for(j in seq_along(tissue_series)){
     # save experiment-level estimates
     fname = paste0(make.names(tissue_select),"_",series)
     saveRDS(res, paste0("../",output_folder,"/mean_pcor2_barcode/",fname,"_cpad_pathcor.RDS"))
-    
+
     accepted_pairs <- length(res)
     actual_pairs <- data.frame("actual_number_of_pairs" = accepted_pairs)
     saveRDS(actual_pairs, paste0("../",output_folder,"/mean_pcor2_barcode/res/pairs.RDS"))
+
 }
