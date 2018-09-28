@@ -1,0 +1,54 @@
+#!/bin/bash
+#$ -l rmem=4G -l mem=4G
+#$ -pe openmp 2
+#$ -j y
+#$ -l h_rt=01:00:00
+#$ -m bea
+#$ -M skariotis1@sheffield.ac.uk
+#$ -P rse
+
+module load apps/R/3.4.0/gcc-4.8.5
+#module load mpi/openmi/2.1.1/gcc-6.2
+
+#Number of cores
+cores=8
+
+# Inputs
+
+# Select genesets file
+gs="MSigDB.L1000CDS2.subset.RDS"
+
+# Select desired relationships based on the table (github)
+# Example: rels="1,2,4,6"
+rels="8"
+
+# Select whether you want partial-correlation(0) or not(1)
+pcor="0"
+
+#$ -t 1-5
+
+# Output folder
+ofo="output_piece"
+
+# Run code (no need to change that) 
+
+# Run tissue-matrices generation
+#Rscript improved_PCxN_estimates00.R $gs
+#echo Estimates_00 done !!!
+
+#Rscript improved_PCxN_estimates01_piece.R $SGE_TASK_ID $cores $rels $gs $pcor $ofo
+
+#Rscript improved_PCxN_estimates02.R 1 $gs $cores $ofo
+
+#for p in $(seq 39)
+#do
+#    Rscript improved_PCxN_estimates02.R $p $gs $cores $ofo
+#    echo Part $p done !!!
+#done
+echo All parts done !!!
+
+# Aggregating the 2 matrices
+#Rscript improved_PCxN_estimates03.R $gs $ofo
+#echo Aggregate done !!!
+
+#echo PCxN Complete !!!

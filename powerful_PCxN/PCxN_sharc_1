@@ -1,0 +1,39 @@
+#!/bin/bash
+#$ -l rmem=24G -l mem=24G
+#$ -pe openmp 12
+#$ -t 1-134
+#$ -j y
+#$ -l h_rt=05:00:00
+#$ -m a
+#$ -M skariotis1@sheffield.ac.uk
+#$ -P rse
+
+module load apps/R/3.4.0/gcc-4.8.5
+#module load mpi/openmi/2.1.1/gcc-6.2
+
+#Number of cores
+cores=12
+
+# Inputs
+
+# Select genesets file
+gs="sok_test_L1000.RDS"
+
+# Select desired relationships based on the table (github)
+# Example: rels="1,2,4,6"
+rels="7"
+
+# Select whether you want partial-correlation(0) or not(1)
+pcor="0"
+
+# Output folder
+ofo="output_sok"
+
+# Run code (no need to change that) 
+
+# Run tissue-matrices generation
+Rscript improved_PCxN_estimates00.R $gs
+echo estimates00 done !!!
+ 
+Rscript PCxN_estimates01.R $SGE_TASK_ID $cores $rels $gs $pcor $ofo
+echo estimates01 done !!!
