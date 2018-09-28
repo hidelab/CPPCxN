@@ -386,3 +386,43 @@ for(j in gse){
     saveRDS(actual_pairs, paste0("../",output_folder,"/mean_pcor2_barcode/res/pairs.RDS"))
 
 }
+
+# Pre-existing
+r_geneset_file <- geneset_file
+r_cores <- cmd_args[2]
+r_output_folder <- output_folder
+r_pcor <- pcor_choice
+r_rels <- rels
+r_pathways <- number_of_pathways
+
+# Initiate reporter matrix
+report <- matrix(nrow = 0, ncol = 2)
+
+# Adding rows to reporter matrix
+report <- rbind(report,c("Genesets file                         ",r_geneset_file))
+temp <- paste("../data/",geneset_file,sep = "")
+report <- rbind(report,c("Genesets file creation Time and Date  ",format(file.info(temp)$ctime, "%a %b %d %X %Y")))
+report <- rbind(report,c("Cores                                 ",r_cores))
+report <- rbind(report,c("Output folder                         ",r_output_folder))
+report <- rbind(report,c("Partial Correlation                   ",r_pcor))
+for(j in r_rels){
+    if(j==1) report <- rbind(report,c("Relation                              ",paste(j," pathway-CMAP",sep=" > ")))
+    if(j==2) report <- rbind(report,c("Relation                              ",paste(j," pathway-CTD",sep=" > ")))
+    if(j==3) report <- rbind(report,c("Relation                              ",paste(j," pathway-PharmGKB",sep=" > ")))
+    if(j==4) report <- rbind(report,c("Relation                              ",paste(j," CMAP-CTD",sep=" > ")))
+    if(j==5) report <- rbind(report,c("Relation                              ",paste(j," CMAP-PharmGKB",sep=" > ")))
+    if(j==6) report <- rbind(report,c("Relation                              ",paste(j," CMAP.up-CMAP.down",sep=" > ")))
+    if(j==7) report <- rbind(report,c("Relation                              ",paste(j," pathway-L1000CDS2",sep=" > ")))
+    if(j==8) report <- rbind(report,c("Relation                              ",paste(j," L1000CDS2.up-L1000CDS2.down",sep=" > ")))
+    if(j==9) report <- rbind(report,c("Relation                              ",paste(j," L1000CDS2.up-L1000CDS2.up",sep=" > ")))
+    if(j==10) report <- rbind(report,c("Relation                              ",paste(j," L1000CDS2.down-L1000CDS2.down",sep=" > ")))
+    if(j==11) report <- rbind(report,c("Relation                              ",paste(j," pathway-pathway",sep=" > ")))
+    if(j==666) report <- rbind(report,c("Relation                              ",paste(j," All possible relationships",sep=" > ")))
+}
+report <- rbind(report,c("Run Date & Time                       ",format(Sys.time(), "%a %b %d %X %Y")))
+report <- rbind(report,c("Pairs                                 ",r_pathways))
+
+# Writing .txt
+temp2 <- paste("../",r_output_folder,"/report.txt",sep = "")
+write.table(report, file = temp2, append = FALSE, sep = " : ", dec = ".", 
+            col.names = FALSE,row.names = FALSE,quote = FALSE)

@@ -182,5 +182,14 @@ for (cp in 1:length(pairs_chunks)) {
 
 # Finish looping through parts
 
+r_parts <- length(pairs_chunks)
+r_output_folder <- output_folder
+report <- matrix(nrow = 0, ncol = 2)
+report <- rbind(report,c("Parts                                 ",r_parts))
+
+temp2 <- paste("../",r_output_folder,"/report.txt",sep = "")
+write.table(report, file = temp2, sep = " : ", dec = ".", append = TRUE,
+            col.names = FALSE,row.names = FALSE,quote = FALSE)
+
 rm(list = ls())
 gc()
