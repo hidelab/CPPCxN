@@ -88,7 +88,8 @@ info <- data.frame("parts" = length(pairs_chunks))
 saveRDS(info, paste0("../",output_folder,"/mean_pcor2_barcode/res/parts.RDS"))
 
 # Start looping through parts here
-for (cp in 1:length(pairs_chunks)) {
+#for (cp in 1:length(pairs_chunks)) {
+for (cp in id:id){
     print("In loop")
     print(cp)
 
