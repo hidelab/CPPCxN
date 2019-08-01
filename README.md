@@ -103,13 +103,13 @@ Run batch script `improved_PCxN_sharc` by first adjusting:
 |       pathway-pathway       | 11 |
 
 ### How to run `powerful_PCxN`, step-by-step
-1. make gene set file (see `/genesets`) and put into `/data`
+1. make gene set file (see `genesets`) and put into `data`
 2. make output file of correct structure (see `example_output_folder`)
 3. modify `src/PCxN_sharc_1` and `src/PCxN_sharc_2` with correct output file name, relationships (rels, see above) and gene set file name
 4. run `PCxN_sharc_1` with 1-134 jobs (approx ram 5gb * 4 cores, approx 1h per tissue)
-5. run `PCxN_sharc_2` with 1:300 jobs, if it fails, check how many parts and adjust (see details in /powerful_PCxN) - also adjust the memory (currently 1 part successfully finishes with 8 cores * 20gb, part 1 took about 1h for approx 8000 gene sets)
+5. run `PCxN_sharc_2` with 1:300 jobs, if it fails, check how many parts and adjust (see details in `powerful_PCxN`) - also adjust the memory (currently 1 part successfully finishes with 8 cores * 20gb, part 1 took about 1h for approx 8000 gene sets)
 
-More info in `/powerful_PCxN` on github
+More info in `powerful_PCxN` on github
 
 
 ## Additional tools
