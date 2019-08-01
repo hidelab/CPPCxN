@@ -1,0 +1,598 @@
+---
+title: "LINCS CDS2 genesets for PCxN"
+output: html_notebook
+---
+
+```{r eval=FALSE, include=FALSE}
+Sys.setenv(TZ='GMT')
+
+cds_meta_all <- read.csv("~/Kat/Documents/Databases/LINCSCDS2/analysis/all_metadata.tsv", sep="\t")
+cds_meta_sig <- read.csv("~/Kat/Documents/Databases/LINCSCDS2/analysis/sigmetadata_lincsCD.tsv", sep="\t")
+
+probe_id_values <- readr::read_delim("~/Kat/Documents/Databases/LINCSCDS2/analysis/signature_probe_gene.tsv", delim="\t", col_names=FALSE)
+colnames(probe_id_values) <- c("_id", "chdir", "pr_id", "pr_gene_symbol", "pr_gene_id")
+
+cds_pvals <- read.csv("~/Kat/Documents/Databases/LINCSCDS2/analysis/pvals_cds2.txt")
+cds_id_pvals <- read.csv("~/Kat/Documents/Databases/LINCSCDS2/analysis/sig_id_pval_cds2.txt", sep=" ")
+```
+info on brd ids: https://clue.io/connectopedia/what_is_a_brd_id
+```{r}
+#check how many signatures are significant per cell type
+cell_sig_freq <- as.data.frame(table(cds_meta_sig$cell_id))
+cell_all_freq <- as.data.frame(table(cds_meta_all$cell_id))
+
+
+
+cell_freq <- dplyr::left_join(cell_all_freq, cell_sig_freq, by="Var1")
+colnames(cell_freq) <- c("cell_type", "total_sig", "signif_sig")
+```
+
+```{r eval=FALSE, include=FALSE}
+# ```{r}
+hist(cds_meta_sig$pvalue)
+# hist(as.numeric(pvals$pval))
+
+library(ggplot2)
+library(dplyr)
+sort(table(cds_meta_sig$cell_id), decreasing = T) #number of signatures per cell line
+head(sort(table(cds_meta_sig$pert_id), decreasing = T), 50) #number of signatures per most popular perts
+
+length(unique(cds_meta_sig$pert_id))
+length(unique(cds_meta_sig$cell_id))
+
+#save it into a table
+cell_meta <- as.data.frame(t(sort(table(cds_meta_sig$cell_id), decreasing = T)))
+rownames(cell_meta) <- cell_meta$Var2
+cell_meta <- cell_meta[,-1]
+colnames(cell_meta) <- c("cell_line", "sig")
+
+cell_meta_all <- as.data.frame(t(sort(table(cds_meta_all$cell_id), decreasing = T)))
+rownames(cell_meta_all) <- cell_meta_all$Var2
+cell_meta_all <- cell_meta_all[,-1]
+colnames(cell_meta_all) <- c("cell_line", "all")
+
+cell_meta <- dplyr::left_join(cell_meta_all, cell_meta, by="cell_line")
+cell_meta$prop <- round(cell_meta$sig/cell_meta$all, 4)
+
+library(reshape)
+data.m <- melt(cell_meta, id.vars='cell_line')
+
+ggplot(data.m, aes(cell_line, value)) +   
+  geom_bar(aes(fill = variable), position = "dodge", stat="identity")
+
+ggplot(cell_meta, aes(cell_line, sig, all, fill = sig)) +
+  geom_bar(stat = "identity")
+
+plot(cell_meta$all, cell_meta$prop)
+
+data.m <- data.m[order(data.m$value), ]
+
+ggplot(data=data.m, aes(x=cell_line, y=value, fill=variable)) +
+    geom_bar(stat="identity") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+sort(table(cds_meta_all$cell_id))
+```
+
+
+```{r eval=FALSE, include=FALSE}
+# gene_ids <- unlist(mget(probe_id_values$pr_id, hgu133aENTREZID, ifnotfound = NA))
+#pr_gene_id is an entrez id, so the genesets can be automatically converted into gene lists
+#the given gene-ids are better mapped than with mget-hgu133aENTREZID
+
+probe_id_values$up <- probe_id_values$chdir > 0
+probe_id_values$down <- probe_id_values$chdir < 0
+
+
+#need to remove all the -666 and the duplicated entrez ids --- ask sokratis what happens if the same entrez id is put in more than twice.
+
+probe_id_values <- probe_id_values[probe_id_values$pr_gene_id != -666, ]
+
+probe_id_values_up <- probe_id_values[probe_id_values$up == TRUE, ]
+probe_id_values_down <- probe_id_values[probe_id_values$down == TRUE, ]
+
+####split the entrez ids /// UP GENES --- get a list of lists
+tosplit <- probe_id_values_up[grep("///", probe_id_values_up$pr_gene_id),]
+tosplit <- unique(tosplit[,c("_id", "pr_gene_id")])
+# tosplit$split <- NA
+x <- list()
+for (i in 1:nrow(tosplit)) {
+# n <- 100
+# tosplit <- tosplit[1:n, ]
+# for (i in 1:n) {
+  # tosplit$split[i] <- strsplit(tosplit$pr_gene_id[i], "///")
+  x[i] <- strsplit(tosplit$pr_gene_id[i], "///")
+  names(x)[i] <- tosplit$`_id`[i] #need to concatenate them to other signatures or could make a dataframe for combining to the rest later 
+}
+x[[1]] == tosplit$split[[1]]
+
+#get the total number of rows required for the data frame that will have each gene as separate row
+sum(lengths(tosplit$split))
+sum(lengths(x))
+
+#make a dataframe that has one gene and it's sig id per row
+split_data <- data.frame(matrix(ncol=7, nrow = sum(lengths(x))), row.names = 1:sum(lengths(x)))
+colnames(split_data) <- colnames(probe_id_values_up)
+split_data$up <- TRUE
+split_data$down <- FALSE
+n <- 1
+for (i in 1:(length(x))) {
+  for (j in 1:(length(x[[i]]))){
+    split_data$`_id`[n] <- names(x)[i]
+    split_data$pr_gene_id[n] <- x[[i]][j]
+    n <- n+1
+  }
+}
+split_data <- unique(split_data)
+probe_id_values_up_ <- rbind(probe_id_values_up, split_data)
+
+
+#######################
+
+####split the entrez ids /// DOWN GENES
+tosplit <- probe_id_values_down[grep("///", probe_id_values_down$pr_gene_id),]
+tosplit <- unique(tosplit)
+x <- list()
+tictoc::tic()
+for (i in 1:nrow(tosplit)) {
+# for (i in 1:100) {
+  x[i] <- strsplit(tosplit$pr_gene_id[i], "///")
+  names(x)[i] <- tosplit$`_id`[i] #need to concatenate them to other signatures or could make a dataframe for combining to the rest later 
+}
+tictoc::toc()
+
+
+#get the total number of rows required for the data frame that will have each gene as separate row
+sum(lengths(x))
+
+tictoc::tic()
+split_data <- data.frame(matrix(ncol=7, nrow = sum(lengths(x))), row.names = 1:sum(lengths(x)))
+colnames(split_data) <- colnames(probe_id_values_down)
+split_data$down <- TRUE
+split_data$up <- FALSE
+n <- 1
+for (i in 1:(length(x))) {
+  for (j in 1:(length(x[[i]]))){
+    split_data$`_id`[n] <- names(x)[i]
+    split_data$pr_gene_id[n] <- x[[i]][j]
+    n <- n+1
+  }
+}
+tictoc::toc()
+split_data <- unique(split_data)
+probe_id_values_down_ <- rbind(probe_id_values_down, split_data)
+```
+
+putting in the right format
+```{r eval=FALSE, include=FALSE}
+
+#put it in the right format the UP gene sets
+probe_id_values_up__ <- probe_id_values_up_[, c("_id", "pr_gene_id")]
+# probe_id_values_up_ <- probe_id_values_up[1:10000, c("_id", "pr_gene_id")]
+probe_id_values_up__ <- aggregate(probe_id_values_up__, list(probe_id_values_up__$`_id`), FUN=c)
+up.gs <- (apply(probe_id_values_up__, 1,  function(a){(a$"pr_gene_id")}))
+names(up.gs) <- as.character(unique(unlist(probe_id_values_up__$"_id"))) #change to a different naming, more meaninghful system
+
+#put it in the right format the DOWN gene sets
+probe_id_values_down__ <- probe_id_values_down_[, c("_id", "pr_gene_id")]
+# probe_id_values_down_ <- probe_id_values_down[1:10000, c("_id", "pr_gene_id")]
+probe_id_values_down__ <- aggregate(probe_id_values_down__, list(probe_id_values_down__$`_id`), FUN=c)
+down.gs <- (apply(probe_id_values_down__, 1,  function(a){(a$"pr_gene_id")}))
+names(down.gs) <- as.character(unique(unlist(probe_id_values_down__$"_id"))) #change to a different naming, more meaninghful system
+
+
+
+# probe_id_values_up_1000 <- probe_id_values_up[1:1000,]
+# 
+# up.gs <- list()
+# names(up.gs) <- unique(probe_id_values_up$`_id`)
+# up.gs <- apply(probe_id_values_up_1000, 1, function(x){unique(as.character(x))})
+# 
+# 
+# GeneSigDB.Hs.gs <- sapply(genesigdbEntrez, function(x){unique(as.character(na.omit(x@geneIds)))})
+# 
+# # Extract names
+# names(GeneSigDB.Hs.gs) <- sapply(genesigdbEntrez, function(x){x@setName})
+# 
+# # limit to minimum of 5 genes
+# GeneSigDB.Hs.gs <- GeneSigDB.Hs.gs[
+# lapply(GeneSigDB.Hs.gs, length) >= 5]
+# length(GeneSigDB.Hs.gs)
+```
+
+```{r}
+# save(up.gs, file ="LINCScds.up.gs")
+# save(down.gs, file="LINCScds.down.gs")
+load("LINCScds.up.gs")
+load("LINCScds.down.gs")
+
+down.gs_ <- down.gs
+up.gs_ <- up.gs
+
+up.gs__ <- lapply(up.gs_, function(x){x[grep("//", x, invert = TRUE)]})
+up.gs__ <- lapply(up.gs__, function(x){unique(x)})
+up.gs.len <- lengths(up.gs__)
+mean(up.gs.len)
+median(up.gs.len)
+hist(up.gs.len)
+sum(up.gs.len < 5)
+small_gs <- names(up.gs.len)[up.gs.len < 5] #names to be removed
+length(small_gs)
+
+down.gs__ <- lapply(down.gs_, function(x){x[grep("//", x, invert = TRUE)]})
+down.gs__ <- lapply(down.gs__, function(x){unique(x)})
+down.gs.len <- lengths(down.gs__)
+mean(down.gs.len)
+median(down.gs.len)
+hist(down.gs.len)
+sum(down.gs.len < 5)
+small_gs <- unique(c(small_gs, names(down.gs.len)[down.gs.len < 5])) #names to be removed
+length(small_gs)
+
+min_gs <- 5
+sum(down.gs.len < min_gs)
+sum(up.gs.len < min_gs)
+length(small_gs)
+#filter out the small gene sets
+# sum(cds_meta_sig$X_id %in% small_gs)
+# cds_meta_sig_big <- cds_meta_sig[!cds_meta_sig$X_id %in% small_gs,]
+# 
+# cds_meta_sig <- cds_meta_sig_big
+
+# filter down the up.gs and the down.gs --- anyway you want
+```
+filter down the up.gs and the down.gs --- anyway you want
+
+There are a lot of replicates in signatures, check the overlap between them
+```{r eval=FALSE, include=FALSE}
+colnames(cds_meta_sig)
+cds_meta_batch <- cds_meta_sig %>% dplyr::select(cell_id, pert_dose_unit, pert_id, pert_time, pert_time_unit, pert_type) %>% arrange(cell_id, pert_dose_unit, pert_id, pert_time, pert_time_unit, pert_type) %>% unique
+
+
+
+```
+
+
+filtering down the numbers
+```{R eval=FALSE, include=FALSE}
+##filtering down the numbers of gene sets, because no specific requirenments for this run
+min_gs <- 5
+sum(down.gs.len < min_gs)
+small_gs <- unique(c(small_gs, names(down.gs.len)[down.gs.len < min_gs])) #names to be removed
+length(small_gs)
+#filter out the small gene sets
+sum(cds_meta_sig$X_id %in% small_gs)
+cds_meta_sig_big <- cds_meta_sig[!cds_meta_sig$X_id %in% small_gs,]
+
+cds_meta_sig <- cds_meta_sig_big
+
+
+#filter to one pert_time
+table(cds_meta_sig$pert_time)
+drug_time <- cds_meta_sig_big[cds_meta_sig$pert_time == 6,]
+table(drug_time$pert_time)
+
+
+#filter to pert_dose values that have at least 10 samples
+table(drug_time$pert_dose_unit)
+sort(table(drug_time$pert_dose))
+drug_dose <- drug_time[drug_time$pert_dose %in% names(sort(table(drug_time$pert_dose), decreasing = T))[sort(table(drug_time$pert_dose), decreasing = T)>10],]
+sort(table(drug_dose$pert_dose))
+
+
+#filter to the most popular cell types
+sort(table(drug_dose$cell_id), decreasing = T)
+drug_cell <- drug_dose[drug_dose$cell_id %in% names(sort(table(drug_dose$cell_id), decreasing = T))[sort(table(drug_dose$cell_id), decreasing = T)> 500],]
+sort(table(drug_cell$cell_id), decreasing = T)
+drug_cell <- droplevels(drug_cell)
+
+#filter to the most popluar drugs
+sort(table(drug_cell$pert_id), decreasing = T)[1:150]
+drug_drug <- drug_cell[drug_cell$pert_id %in% names(sort(table(drug_cell$pert_id), decreasing = T))[sort(table(drug_cell$pert_id), decreasing = T)> 4],]
+sort(table(drug_drug$pert_id), decreasing = T)[1:500]
+sort(table(drug_drug$pert_time), decreasing = T)
+sort(table(drug_drug$pert_dose), decreasing = T)
+sort(table(drug_drug$cell_id), decreasing = T)
+
+#check what is left
+table(droplevels(drug_drug$pert_id), droplevels(drug_drug$cell_id))
+
+length(unique(droplevels(drug_drug$pert_id))) #number of different drugs
+nrow(drug_drug)
+
+
+# drug_names <- (names((sort(table(cds_meta_sig$pert_id), decreasing = T)))[1:1500])
+# sort(rowSums(table(cds_meta_sig$cell_id[cds_meta_sig$pert_id %in% drug_names], cds_meta_sig$pert_id[cds_meta_sig$pert_id %in% drug_names]))) #how many samples per cell line if we only look at the top 1500 drugs
+# sort(rowSums(table(cds_meta_sig$pert_dose[cds_meta_sig$pert_id %in% drug_names], cds_meta_sig$pert_id[cds_meta_sig$pert_id %in% drug_names]))) #how many samples per concentration if we only look at the top 1500 drugs
+# 
+# 
+# drug_cell <- as.data.frame(table(cds_meta_sig$cell_id[cds_meta_sig$pert_id %in% drug_names], cds_meta_sig$pert_id[cds_meta_sig$pert_id %in% drug_names]))
+
+#L1000CDS2.up.sig_id
+
+```
+
+### filtering down the number of gene sets for Rheumatoid Arthritis study
+```{R eval=FALSE, include=FALSE}
+blood_cell_types <- c("NOMO1", "THP1", "U937", "PL21", "SKM1", "WSUDLCL2")
+neuro_cell_types <- c("NEU", "NPC")
+skin_cell_types <- c(
+                    # "A375", 
+                     "SKMEL28", "SKMEL1")
+
+cell_types <- c(blood_cell_types, neuro_cell_types, skin_cell_types)
+
+
+neuroprotective <- read.csv("~/Google Drive/Documents/Parkinsons/translated_drug_list_neuroprotective.csv")
+PD_dugs <- read.csv("~/Google Drive/Documents/Parkinsons/translated_drug_list_PD.csv")
+AD_drugs <- read.csv("~/Google Drive/Documents/KATdb_shiny/translated_drug_list_AD.csv")
+RA_drugs <- read.csv("~/Google Drive/Documents/Rheumatoid Arthritis/RA2019/translated_drug_list_RA.csv")
+drug_list <- rbind(neuroprotective, PD_dugs, AD_drugs, RA_drugs)
+drug_list <- drug_list[!duplicated(drug_list$target_name) & !is.na(drug_list$target_name),]
+drug_list <- drug_list$target_name
+length(drug_list)
+
+##filtering down the numbers of gene sets for RA study
+
+##get the cell types required and the drugs to add to a random selection
+#filter to selected cell types
+x <- cds_meta_sig
+sort(table(x$cell_id), decreasing = T)
+drug_cell_seed <- x[x$cell_id %in% cell_types,]
+sort(table(drug_cell_seed$cell_id), decreasing = T)
+sum(table(drug_cell_seed$cell_id))
+drug_cell_seed <- droplevels(drug_cell_seed)
+x <- drug_cell_seed
+sort(table(x$pert_id), decreasing = T)[1:100]
+sort(table(x$pert_time), decreasing = T)
+sort(table(x$pert_dose), decreasing = T)
+sort(table(x$cell_id), decreasing = T)
+
+
+#filter to drugs of interest
+x <- cds_meta_sig
+nrow(x[x$pert_id %in% drug_list,])
+sort(table(x$pert_id), decreasing = T)[1:150]
+drug_drug_seed <- x[x$pert_id %in% drug_list,]
+sum(table(drug_drug_seed$pert_id))
+x <- drug_drug_seed
+sort(table(x$pert_id), decreasing = T)[sort(table(x$pert_id), decreasing = T)>0]
+sort(table(x$pert_time), decreasing = T)
+sort(table(x$pert_dose), decreasing = T)
+sort(table(x$cell_id), decreasing = T)[sort(table(x$cell_id), decreasing = T)>0]
+table(x$cell_id[x$cell_id%in%cell_types])[table(x$cell_id[x$cell_id%in%cell_types])>0]
+
+#join seeded dfs
+seed_samp <-  unique(rbind(drug_cell_seed, drug_drug_seed))
+x <- seed_samp
+sort(table(x$pert_id), decreasing = T)[sort(table(x$pert_id), decreasing = T)>5]
+sort(table(x$pert_time), decreasing = T)
+sort(table(x$pert_dose), decreasing = T)
+sort(table(x$cell_id), decreasing = T)[sort(table(x$cell_id), decreasing = T)>0]
+
+
+##get a random selection
+#filter to the most popular cell types
+x <- cds_meta_sig
+sort(table(x$cell_id), decreasing = T)
+drug_cell <- x[x$cell_id %in% names(sort(table(x$cell_id), decreasing = T))[sort(table(x$cell_id), decreasing = T)> 2000],]
+drug_cell <- droplevels(drug_cell)
+sort(table(drug_cell$cell_id), decreasing = T)
+
+
+#filter to most popular pert_time
+x <- drug_cell
+table(x$pert_time)
+drug_time <- x[x$pert_time %in% c(24),]
+table(drug_time$pert_time)
+sum(table(drug_time$pert_time))
+
+#filter to pert_dose values that have at least 10 samples and be at least 1um
+x <- drug_time
+table(x$pert_dose_unit)
+sort(table(x$pert_dose))
+x <- x[x$pert_dose > 1,]
+drug_dose <- x[x$pert_dose %in% names(sort(table(x$pert_dose), decreasing = F))[sort(table(x$pert_dose), decreasing = F)>20],]
+sort(table(drug_dose$pert_dose))
+sum(table(drug_dose$pert_dose))
+
+#filter to the most popluar drugs
+x <- drug_dose
+sort(table(x$pert_id), decreasing = T)[1:150]
+drug_drug <- x[x$pert_id %in% names(sort(table(x$pert_id), decreasing = T))[sort(table(x$pert_id), decreasing = T)> 5],]
+sort(table(drug_drug$pert_id), decreasing = T)[1:20]
+sort(table(drug_drug$pert_time), decreasing = T)
+sort(table(drug_drug$pert_dose), decreasing = T)
+sort(table(drug_drug$cell_id), decreasing = T)
+sum(table(drug_drug$pert_id))
+
+#check what is left
+table(droplevels(drug_drug$pert_id), droplevels(drug_drug$cell_id))
+sum(table(drug_drug$pert_id))
+length(unique(droplevels(drug_drug$pert_id))) #number of different drugs
+nrow(drug_drug)
+
+drug_drug$experiment_id <- sub("([0-9]):.*", "\\1", drug_drug$sig_id) 
+sort(table(drug_drug$experiment_id), decreasing = T)[1:20]
+
+#join with seed 
+seed_samp$experiment_id <- sub("([0-9]):.*", "\\1", seed_samp$sig_id) 
+sort(table(seed_samp$experiment_id), decreasing = T)[1:20]
+selected_drug <- unique(rbind(seed_samp, drug_drug))
+selected_drug <- unique(selected_drug[order(selected_drug$X_id),])
+nrow(selected_drug)
+
+
+# drug_names <- (names((sort(table(cds_meta_sig$pert_id), decreasing = T)))[1:1500])
+# sort(rowSums(table(cds_meta_sig$cell_id[cds_meta_sig$pert_id %in% drug_names], cds_meta_sig$pert_id[cds_meta_sig$pert_id %in% drug_names]))) #how many samples per cell line if we only look at the top 1500 drugs
+# sort(rowSums(table(cds_meta_sig$pert_dose[cds_meta_sig$pert_id %in% drug_names], cds_meta_sig$pert_id[cds_meta_sig$pert_id %in% drug_names]))) #how many samples per concentration if we only look at the top 1500 drugs
+# 
+# 
+# drug_cell <- as.data.frame(table(cds_meta_sig$cell_id[cds_meta_sig$pert_id %in% drug_names], cds_meta_sig$pert_id[cds_meta_sig$pert_id %in% drug_names]))
+
+#L1000CDS2.up.sig_id
+```
+rename the genesets
+
+subset the gene sets only on the ones we want. 
+```{r eval=FALSE, include=FALSE}
+#keep the signatures
+keep <- drug_drug$X_id
+down.gs.filter <- down.gs__[names(down.gs__) %in% keep]
+up.gs.filter <- up.gs__[names(up.gs__) %in% keep]
+
+down.gs.filter <- down.gs.filter[order(drug_drug$X_id)]
+up.gs.filter <- up.gs.filter[order(drug_drug$X_id)]
+
+names(down.gs.filter) <- paste("L1000CDS2.down", drug_drug$sig_id, sep = ".") #change to a different naming, more meaninghful system
+names(up.gs.filter) <- paste("L1000CDS2.up", drug_drug$sig_id, sep = ".") #change to a different naming, more meaninghful system
+
+drug_drug$PDN_name <- paste("L1000CDS2", drug_drug$sig_id, sep = ".")
+
+
+L1000CDS2.gs <- c(up.gs.filter, down.gs.filter)
+length(up.gs.filter)
+length(down.gs.filter)
+length(L1000CDS2.gs)
+
+# save(L1000CDS2.gs, file ="L1000CDS2.subset.gs")
+# save(L1000CDS2.gs, file ="L1000CDS2.subset.2700.gs")
+```
+
+keep selected drugs
+```{r eval=FALSE, include=FALSE}
+#keep the signatures
+x <- selected_drug
+keep <- x$X_id
+down.gs.filter <- down.gs__[names(down.gs__) %in% keep]
+up.gs.filter <- up.gs__[names(up.gs__) %in% keep]
+
+down.gs.filter <- down.gs.filter[order(x$X_id)]
+up.gs.filter <- up.gs.filter[order(x$X_id)]
+
+names(down.gs.filter) <- paste("L1000CDS2.down", x$sig_id, sep = ".") #change to a different naming, more meaninghful system
+names(up.gs.filter) <- paste("L1000CDS2.up", x$sig_id, sep = ".") #change to a different naming, more meaninghful system
+
+x$PDN_name <- paste("L1000CDS2", x$sig_id, sep = ".")
+
+
+L1000CDS2.gs.selected <- c(up.gs.filter, down.gs.filter)
+length(up.gs.filter)
+length(down.gs.filter)
+length(L1000CDS2.gs.selected)
+
+# save(L1000CDS2.gs.selected, file ="L1000CDS2.selected.subset.gs")
+# save(L1000CDS2.gs, file ="L1000CDS2.subset.2700.gs")
+```
+
+
+```{r}
+library(pathprint)
+data("pathprint.Hs.gs")
+
+version <- "pathprint.L1000CDS2.subset"
+load("L1000CDS2.subset.gs")
+load("DPD.Union.2017.Hs.gs")
+DPD.Hs.gs.new <- DPD.Hs.gs
+DPD.Hs.gs.Pathway <- DPD.Hs.gs.new[grep("Pathway\\.", names(DPD.Hs.gs.new))]
+DPD.Hs.gs.Static <- DPD.Hs.gs.Pathway[grep("Static Module", names(DPD.Hs.gs.Pathway))]
+head(DPD.Hs.gs.Pathway)
+names(DPD.Hs.gs.Static) <- sub("`", "", names(DPD.Hs.gs.Static))
+names(DPD.Hs.gs.Static) <- gsub("\\{|\\(", "", names(DPD.Hs.gs.Static))
+names(DPD.Hs.gs.Static) <- gsub("\\}|\\)", "", names(DPD.Hs.gs.Static))
+names(DPD.Hs.gs.Static) <- gsub(" |,", "_", names(DPD.Hs.gs.Static))
+head(names(DPD.Hs.gs.Static))
+head(DPD.Hs.gs.Static)
+
+DPD.Hs.gs.L1000CDS2 <- c(DPD.Hs.gs.Pathway, L1000CDS2.gs)
+length(DPD.Hs.gs.L1000CDS2)
+
+# saveRDS(DPD.Hs.gs.L1000CDS2, file= paste("DPD.Hs.gs.PDN.", version, ".RDS", sep=""))
+# saveRDS(L1000CDS2.gs, file = "L1000CDS.Hs.gs")
+
+version <- "MSigDB.L1000CDS2.subset"
+load("L1000CDS2.subset.gs")
+MSigDB.Hs.gs <- readRDS("MSigDB.Hs.gs")
+MSigDB.Hs.gs.L1000CDS2 <- c(MSigDB.Hs.gs, L1000CDS2.gs)
+length(MSigDB.Hs.gs.L1000CDS2)
+
+# saveRDS(MSigDB.Hs.gs.L1000CDS2, file= paste(version, ".RDS", sep=""))
+
+#made this version for RA, AD, PD relevant cells and drugs
+#19/02/2019
+version <- "MSigDB.L1000CDS2.selected.staticmod.subset"
+# can be any subset of LINCS CDS2, this one is from above, enriched for RA, PD and AD things
+load("L1000CDS2.selected.subset.gs")
+MSigDB.Hs.gs <- readRDS("MSigDB.Hs.gs")
+MSigDB.Hs.gs.L1000CDS2.selected <- c(MSigDB.Hs.gs, DPD.Hs.gs.Static, L1000CDS2.gs.selected)
+length(MSigDB.Hs.gs.L1000CDS2.selected)
+head(MSigDB.Hs.gs.L1000CDS2.selected)
+
+# this file is currently used
+# saveRDS(MSigDB.Hs.gs.L1000CDS2.selected, file= paste(version, ".RDS", sep=""))
+```
+subset to p value
+```{r eval=FALSE, include=FALSE}
+hist(cds_id_pvals$pval, breaks = 100)
+head(up.gs.filter)
+head(cds_id_pvals)
+head(drug_drug)
+
+dim(drug_drug)
+drug_pval <- drug_drug[drug_drug$X_id %in% cds_id_pvals$ObjectId[cds_id_pvals$pval < 0.01],]
+dim(drug_pval)
+drug_pval <- drug_drug[drug_drug$X_id %in% cds_id_pvals$ObjectId[cds_id_pvals$pval < 0.001],]
+dim(drug_pval)
+
+```
+
+
+subset the gene sets only on the ones we want. 
+```{r eval=FALSE, include=FALSE}
+#keep the signatures
+keep <- drug_drug$X_id
+down.gs.filter <- down.gs__[names(down.gs__) %in% keep]
+up.gs.filter <- up.gs__[names(up.gs__) %in% keep]
+
+down.gs.filter <- down.gs.filter[order(drug_drug$X_id)]
+up.gs.filter <- up.gs.filter[order(drug_drug$X_id)]
+
+names(down.gs.filter) <- paste("L1000CDS2.down", drug_drug$sig_id, sep = ".") #change to a different naming, more meaninghful system
+names(up.gs.filter) <- paste("L1000CDS2.up", drug_drug$sig_id, sep = ".") #change to a different naming, more meaninghful system
+
+drug_drug$PDN_name <- paste("L1000CDS2", drug_drug$sig_id, sep = ".")
+
+
+L1000CDS2.gs <- c(up.gs.filter, down.gs.filter)
+length(up.gs.filter)
+length(down.gs.filter)
+length(L1000CDS2.gs)
+
+# save(L1000CDS2.gs, file ="L1000CDS2.subset.gs")
+```
+
+
+```{r}
+library(pathprint)
+data("pathprint.Hs.gs")
+
+version <- "pathprint.L1000CDS2.subset"
+
+load("DPD.Union.2017.Hs.gs")
+DPD.Hs.gs.new <- DPD.Hs.gs
+DPD.Hs.gs.Pathway <- DPD.Hs.gs.new[grep("Pathway\\.", names(DPD.Hs.gs.new))]
+
+DPD.Hs.gs.L1000CDS2 <- c(DPD.Hs.gs.Pathway, L1000CDS2.gs)
+length(DPD.Hs.gs.L1000CDS2)
+
+# saveRDS(DPD.Hs.gs.L1000CDS2, file= paste("DPD.Hs.gs.PDN.", version, ".RDS", sep=""))
+# saveRDS(L1000CDS2.gs, file = "L1000CDS.Hs.gs")
+
+version <- "MSigDB.L1000CDS2.subset"
+load("L1000CDS2.subset.gs")
+MSigDB.Hs.gs <- readRDS("MSigDB.Hs.gs")
+MSigDB.Hs.gs.L1000CDS2 <- c(MSigDB.Hs.gs, L1000CDS2.gs)
+
+# saveRDS(MSigDB.Hs.gs.L1000CDS2, file= paste(version, ".RDS", sep=""))
+
+length(MSigDB.Hs.gs)
+```
