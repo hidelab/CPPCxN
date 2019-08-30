@@ -121,13 +121,14 @@ This tool allows the combination of **2+** PCxN output matrices into one. The co
 Due to the simplicity and low resource requirements, this script can be run both locally(`P-combiner_local.R`) and on sharc (`P-combiner_sharc.R`). The latter should only be used in extreme cases where a large number of matrices needs to be combined or the matrices themselves are very large in size.
 
 #### How to use
-Place parts1 and 2 (output of `improved_PCxN_estimates02.R`) of all matrices in the same folder as the combiner script.In both local/sharc:
+Specify the path to parts folder with first part of the parts name eg. `output1/mean_pcor2_barcode/res/pcxn_mean_pcor2_barcode` (output of `improved_PCxN_estimates02.R`) of all matrices without `_parts11.RDS`. In both local/sharc:
 1. The first argument is composed of the matrix names (the part before "_part1.RDS") seperated by commas.
-2. The second argument is the entire name of the combined matrix without the .RDS filename extension (e.g. matri1_matrix2).
+2. The second argument is composed of number of parts for each run separated by commas.
+3. The third argument is the entire name of the combined matrix without the .RDS filename extension (e.g. matri1_matrix2).
 
 Example
-1. Local(load the function first): `p_combiner(inputs = c("pcxn_conc_base","pcxn_conc_plus_10","pcxn_conc_plus_20"),output_name = "pcxn_conc_base_plus_10_plus_20")`
-2. Sharc: `Rscript P-combiner_sharc.R pcxn_conc_base,pcxn_conc_plus_10,pcxn_conc_plus_20 pcxn_conc_base_plus_10_plus_20`
+1. Local(load the function first): `p_combiner(inputs = c("pcxn_conc_base","pcxn_conc_plus_10","pcxn_conc_plus_20"), nparts = c(2,2,2), output_name = "pcxn_conc_base_plus_10_plus_20")`
+2. Sharc: `Rscript P-combiner_sharc.R pcxn_conc_base,pcxn_conc_plus_10,pcxn_conc_plus_20 2,2,2 pcxn_conc_base_plus_10_plus_20`
 
 ### P-adder
 This tool takes a PcxN output matrix as a base and runs/adds the results of a different set of genesets (much like running a new PCxN without the pairs that have already been calculated). Checks that same named genesets have an identical gene member list. The tools requires only the base matrix to be pre-calculated and calculates only the necessary pairs (the ones that don't already exist in the base matrix).

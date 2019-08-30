@@ -1,38 +1,40 @@
-p_combiner <- function (inputs,output_name) {
+p_combiner <- function (inputs,nparts,output_name) {
     # We need estimates02 to be completed for both runs
     
     options(stringsAsFactors = F)
 
     # ==== example inputs ====
     # inputs <- c("pcxn_conc_base","pcxn_conc_plus_10","pcxn_conc_plus_20")
+    # nparts <- c(2,2,2)
     # output_name <- "pcxn_conc_base_plus_10_plus_20"
     
     # Check if all necessary files exists in this directory
-    for(i in inputs) {
-        tname1 <- paste(i,"_part1.RDS",sep = "")
-        tname2 <- paste(i,"_part2.RDS",sep = "")
-        
-        if(!file_test("-f", tname1)) stop(paste(tname1, ": No such file found in this directory!",sep = ""))
-        if(!file_test("-f", tname2)) stop(paste(tname2, ": No such file found in this directory!",sep = ""))
+    for(i in 1:length(inputs)) {
+        for (k in 1:nparts[i]){
+            tname1 <- paste0(inputs[i],"_part", k, ".RDS")
+            if(!file_test("-f", tname1)) stop(paste(tname1, ": No such file found in this directory!",sep = ""))
+        }
     }
     
     # empty variable to store results
     pcxn = c()
-    pb = txtProgressBar(min=0,max=2,initial=0,style=3)
+    pb = txtProgressBar(min=0,max=max(nparts),initial=0,style=3)
     
-    for(k in 1:2){
-        # read each part of each
+    # read each part of each 
+    for (m in 1:length(inputs)) {
         conc_tmp <- c()
-        for (m in inputs) {
-            tmp <- readRDS(paste0(m ,"_part", k, ".RDS"))
+        for (k in nparts[m]) {
+            tmp <- readRDS(paste0(inputs[m] ,"_part", k, ".RDS"))
             conc_tmp <- rbind(conc_tmp,tmp)
         }
-        
         conc_tmp <- unique(conc_tmp)
         pcxn = rbind(pcxn, conc_tmp)
         setTxtProgressBar(pb,k)
     }
+    
     close(pb)
+    
+    pcxn <- unique(pcxn)
     
     # adjust p-values for multiple comparison
     pcxn$p.Adjust = p.adjust(p = pcxn$p.value, method = "fdr")
@@ -40,3 +42,7 @@ p_combiner <- function (inputs,output_name) {
     # save results
     saveRDS(pcxn, paste0(output_name,".RDS"))
 }
+
+
+
+
