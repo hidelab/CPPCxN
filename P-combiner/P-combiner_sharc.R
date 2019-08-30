@@ -36,21 +36,22 @@ for(i in 1:length(inputs)) {
 pcxn = c()
 pb = txtProgressBar(min=0,max=max(nparts),initial=0,style=3)
 
-
 # read each part of each 
 for (m in 1:length(inputs)) {
-	conc_tmp <- c()
-	for (k in nparts[m]) {
-		tmp <- readRDS(paste0(inputs[m] ,"_part", k, ".RDS"))
-    	conc_tmp <- rbind(conc_tmp,tmp)
-	}
-	conc_tmp <- unique(conc_tmp)
+    print(paste0("adding ", inputs[m]))
+    conc_tmp <- c()
+    for (k in 1:nparts[m]) {
+        print(k)
+        tmp <- readRDS(paste0(inputs[m] ,"_part", k, ".RDS"))
+        conc_tmp <- rbind(conc_tmp,tmp)
+    }
+    # conc_tmp <- unique(conc_tmp)
     pcxn = rbind(pcxn, conc_tmp)
     setTxtProgressBar(pb,k)
 }
 
 close(pb)
-pcxn <- unique(pcxn)
+# pcxn <- unique(pcxn)
 
 # adjust p-values for multiple comparison
 pcxn$p.Adjust = p.adjust(p = pcxn$p.value, method = "fdr")

@@ -22,8 +22,10 @@ p_combiner <- function (inputs,nparts,output_name) {
     
     # read each part of each 
     for (m in 1:length(inputs)) {
+        print(paste0("adding ", inputs[m]))
         conc_tmp <- c()
-        for (k in nparts[m]) {
+        for (k in 1:nparts[m]) {
+            print(k)
             tmp <- readRDS(paste0(inputs[m] ,"_part", k, ".RDS"))
             conc_tmp <- rbind(conc_tmp,tmp)
         }
