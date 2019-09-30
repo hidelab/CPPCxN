@@ -50,9 +50,18 @@ rm(conc_tmp)
 close(pb)
 print(nrow(pcxn))
 print("about to remove duplicates")
+
+pcxn$p.Adjust <- NULL
+
 print(Sys.time())
-pcxn <- pcxn[!duplicated(pcxn[,c(1:4)] ),]
+pcxn <- dplyr::distinct(pcxn, Pathway.A, Pathway.B, PathCor, Overlap.Coefficient, .keep_all = T)
 print(Sys.time())
+
+# print(Sys.time())
+# pcxn <- pcxn[!duplicated(pcxn[,c(1:4)] ),]
+# print(Sys.time())
+
+
 print(nrow(pcxn))
 
 # adjust p-values for multiple comparison

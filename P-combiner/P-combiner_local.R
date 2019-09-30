@@ -29,14 +29,14 @@ p_combiner <- function (inputs,nparts,output_name) {
             tmp <- readRDS(paste0(inputs[m] ,"_part", k, ".RDS"))
             conc_tmp <- rbind(conc_tmp,tmp)
         }
-        conc_tmp <- unique(conc_tmp)
+        # conc_tmp <- unique(conc_tmp)
         pcxn = rbind(pcxn, conc_tmp)
         setTxtProgressBar(pb,k)
     }
     
     close(pb)
     
-    pcxn <- unique(pcxn)
+    # pcxn <- unique(pcxn)
     
     # adjust p-values for multiple comparison
     pcxn$p.Adjust = p.adjust(p = pcxn$p.value, method = "fdr")
