@@ -76,6 +76,7 @@ gs_lst = readRDS(paste("../data/",geneset_file, sep=""))
 npairs <- readRDS(paste0("../",output_folder,"/mean_pcor2_barcode/res/pairs.RDS"))
 number_of_pathways = npairs[[1]]
 # split pathway pairs in chunks
+#consider splitting into larger chunks as most of the mem is reading in al experiment-level estimates
 pairs_chunks <- split(1:number_of_pathways, ceiling(1:number_of_pathways/100000))
 
 # ==== Pathway Names =====
@@ -89,21 +90,28 @@ saveRDS(info, paste0("../",output_folder,"/mean_pcor2_barcode/res/parts.RDS"))
 
 # Start looping through parts here
 #for (cp in 1:length(pairs_chunks)) {
+#this loop can be removed?
 for (cp in id:id){
     print("In loop")
     print(cp)
 
     myLst = tML[ pairs_chunks[[ cp ]] ]
+    #could remove tML here
+
     print(length(myLst))
 
     # get names for pathway pairs
     t0 <- sapply(myLst,function(x){ c(x[["Pathway.A"]],x[["Pathway.B"]]) })
 
     t1 <- t(t0)
+    #could remove t0 here
+
     print(dim( t1 ))
     #print(t1[1,])
     #print(t1[,1])
     res = as.data.frame( t1 )
+    #could remove t1 here
+
     colnames(res) = c("Pathway.A","Pathway.B")
 
     # ==== Overlap Coefficient =====

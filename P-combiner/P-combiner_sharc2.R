@@ -69,5 +69,7 @@ pcxn$p.Adjust = p.adjust(p = pcxn$p.value, method = "fdr")
 
 # save results
 saveRDS(pcxn[pcxn$p.Adjust < 1, ], paste0(output_name,"p.adj<1.RDS"))
+saveRDS(pcxn[pcxn$p.Adjust < 0.05, ], paste0(output_name,"p.adj<0.05.RDS"))
 saveRDS(pcxn, paste0(output_name,".RDS"))
+
 print("done")
