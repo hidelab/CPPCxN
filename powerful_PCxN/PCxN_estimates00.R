@@ -1,5 +1,7 @@
 # First part of improved PCxN
-# Created by: Sokratis Kariotis
+# Created by: Yered Pita-Juarez
+# Modified by: Sokratis Kariotis
+# Modified by: Katjusa Koler
 
 # Purpose: Update Gene Set Annotation: Keep only genes present in the gene expression background
 

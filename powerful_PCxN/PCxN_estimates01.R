@@ -1,5 +1,7 @@
 # Second part of improved PCxN
-# Created by: Sokratis Kariotis
+# Created by: Yered Pita-Juarez
+# Modified by: Sokratis Kariotis
+# Modified by: Katjusa Koler
 
 # Purpose: Get experiment-level estimates. For each experiment, estimate all
 # pairwise pathway correlation coefficients along with the corresponding p-values.
@@ -166,7 +168,6 @@ ShrinkPCor <- function(x,y,z,method="pearson"){
     if(length(x) == length(y) & length(z) == length(x)){
         n <- length(x)
     }else{
-        
         cat("x,y and z have different lengths! >=( \n")
         return(NA)
     }
